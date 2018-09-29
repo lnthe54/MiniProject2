@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">MiniProject2</string>
+    <string name="name_app">Music</string>
+    <string name="search">Search</string>
+    <string name="setting">Setting</string>
+    <string name="artists">Artists</string>
+    <string name="albums">Albums</string>
+    <string name="songs">Song</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="name_app1">Play</string>
+    <string name="title">Music Player</string>
+</resources>
