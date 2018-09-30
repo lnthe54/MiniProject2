@@ -9,14 +9,13 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.lnthe54.miniproject2.R;
-import com.example.lnthe54.miniproject2.adapter.SongAdapter;
+import com.example.lnthe54.miniproject2.adapter.SongOfAlbumAdapter;
 import com.example.lnthe54.miniproject2.model.Song;
 import com.example.lnthe54.miniproject2.ultis.Config;
 import com.example.lnthe54.miniproject2.ultis.ConvertTime;
@@ -40,7 +39,7 @@ public class DetailAlbumActivity extends AppCompatActivity {
 
     private ArrayList<Song> listSong;
     private RecyclerView rvListSong;
-    private SongAdapter songAdapter;
+    private SongOfAlbumAdapter songAdapter;
 
     private int idAlbum;
     private String nameAlbum;
@@ -98,7 +97,7 @@ public class DetailAlbumActivity extends AppCompatActivity {
         getListSongOfAlbum(idAlbum);
         getTimeOfListSong();
         tvDurationTotal.setText(listSong.size() + " bài hát\t|\t" + ConvertTime.miniSecondToString(totalTime));
-        songAdapter = new SongAdapter(listSong);
+        songAdapter = new SongOfAlbumAdapter(listSong);
         rvListSong.setAdapter(songAdapter);
     }
 
