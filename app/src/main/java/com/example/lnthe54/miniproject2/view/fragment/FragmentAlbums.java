@@ -1,6 +1,7 @@
 package com.example.lnthe54.miniproject2.view.fragment;
 
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ import android.view.ViewGroup;
 import com.example.lnthe54.miniproject2.R;
 import com.example.lnthe54.miniproject2.adapter.AlbumAdapter;
 import com.example.lnthe54.miniproject2.model.Albums;
+import com.example.lnthe54.miniproject2.ultis.Config;
+import com.example.lnthe54.miniproject2.view.activity.DetailAlbumActivity;
 
 import java.util.ArrayList;
 
@@ -24,7 +27,7 @@ import java.util.ArrayList;
  * @author lnthe54 on 9/28/2018
  * @project MiniProject2
  */
-public class FragmentAlbums extends Fragment {
+public class FragmentAlbums extends Fragment implements AlbumAdapter.CallBack {
     private static FragmentAlbums instance;
     private static final int SPAN_COUNT = 3;
     private RecyclerView rvListAlbum;
@@ -57,7 +60,7 @@ public class FragmentAlbums extends Fragment {
         listAlbum = new ArrayList<>();
         getAlbumToStorage();
 
-        albumAdapter = new AlbumAdapter(listAlbum);
+        albumAdapter = new AlbumAdapter(this, listAlbum);
         rvListAlbum.setAdapter(albumAdapter);
     }
 
@@ -80,5 +83,21 @@ public class FragmentAlbums extends Fragment {
                 listAlbum.add(albums);
             } while (cursor.moveToNext());
         }
+    }
+
+    @Override
+    public void itemClick(int position) {
+        Intent openDetailAlbum = new Intent(getContext(), DetailAlbumActivity.class);
+
+        int idAlbum = listAlbum.get(position).getId();
+        String nameAlbum = listAlbum.get(position).getNameAlbum();
+        String nameArtist = listAlbum.get(position).getAuthorAlbum();
+        String path = listAlbum.get(position).getAlbumArt();
+
+        openDetailAlbum.putExtra(Config.ID_ALBUM, idAlbum);
+        openDetailAlbum.putExtra(Config.NAME_ALBUM, nameAlbum);
+        openDetailAlbum.putExtra(Config.NAME_ARTIST, nameArtist);
+        openDetailAlbum.putExtra(Config.IMAGE, path);
+        startActivity(openDetailAlbum);
     }
 }

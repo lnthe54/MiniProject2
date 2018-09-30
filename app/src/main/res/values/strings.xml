@@ -2,7 +2,7 @@
     <string name="app_name">MiniProject2</string>
     <string name="name_app">Music</string>
     <string name="search">Search</string>
-    <string name="setting">Setting</string>
+    <string name="setting">Cài Đặt</string>
     <string name="artists">Artists</string>
     <string name="albums">Albums</string>
     <string name="songs">Song</string>
@@ -10,4 +10,14 @@
     <string name="close">Close</string>
     <string name="name_app1">Play</string>
     <string name="title">Music Player</string>
+    <string name="hint_search">tìm kiếm...</string>
+    <string name="my_music">My Music</string>
+    <string name="user_name">lnthe54</string>
+    <string name="type_account">FREE</string>
+    <string name="log_out">Đăng Xuất</string>
+    <string name="other">Other</string>
+    <string name="song">Bài Hát</string>
+    <string name="artist">Ca Sĩ</string>
+    <string name="favourite">Nhạc Yêu Thích</string>
+    <string name="shuffle">Nghe Ngẫu Nhiên</string>
 </resources>

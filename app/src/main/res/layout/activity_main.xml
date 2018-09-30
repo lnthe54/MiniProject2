@@ -12,20 +12,11 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!--<android.support.v7.widget.Toolbar-->
-        <!--android:id="@+id/toolbar"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:background="@color/colorBg"-->
-        <!--android:minHeight="?attr/actionBarSize"-->
-        <!--android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"-->
-        <!--app:popupTheme="@style/ThemeOverlay.AppCompat.Light"></android.support.v7.widget.Toolbar>-->
-
         <include
             android:id="@+id/toolbar"
+            layout="@layout/custom_toolbar_main"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            layout="@layout/custom_toolbar_main"></include>
+            android:layout_height="wrap_content"></include>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tab_layout"
@@ -35,7 +26,7 @@
             android:minHeight="?attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:tabIndicatorColor="@color/colorGrey"
-            app:tabSelectedTextColor="@android:color/white"
+            app:tabSelectedTextColor="@color/colorWhite"
             app:tabTextColor="@color/colorWhite"></android.support.design.widget.TabLayout>
 
         <android.support.v4.view.ViewPager
@@ -47,8 +38,9 @@
     <android.support.design.widget.NavigationView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:menu="@menu/drawer_menu">
+        app:headerLayout="@layout/head_navigation_drawer"
+        app:menu="@menu/drawer_menu"
+        android:layout_gravity="start">
 
     </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>
