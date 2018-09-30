@@ -11,9 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.example.lnthe54.miniproject2.R;
@@ -30,9 +28,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private ViewPager viewPager;
     private ViewPagerAdapter pagerAdapter;
     private ImageView ivHome;
-    private ImageView ivSearch;
-    private EditText etSearch;
-    private boolean isOpen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +65,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void initViews() {
-        initToolbar();
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(null);
+        ivHome = findViewById(R.id.ic_home);
+        ivHome.setOnClickListener(this);
 
         drawerLayout = findViewById(R.id.drawer_layout);
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
@@ -81,16 +80,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         viewPager = findViewById(R.id.pager);
         addPagerAdapter();
     }
-
-    private void initToolbar() {
-        isOpen = true;
-        ivHome = findViewById(R.id.ic_home);
-        ivSearch = findViewById(R.id.ic_search);
-        etSearch = findViewById(R.id.et_search);
-        ivHome.setOnClickListener(this);
-        ivSearch.setOnClickListener(this);
-    }
-
     private void addPagerAdapter() {
         pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
@@ -99,44 +88,14 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         tabLayout.setupWithViewPager(viewPager);
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        if (drawerToggle.onOptionsItemSelected(item)) {
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.action_bar_main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ic_home: {
-                if (isOpen) {
-                    drawerLayout.openDrawer(Gravity.LEFT);
-                } else {
-                    ivHome.setImageResource(R.drawable.ic_home);
-                    etSearch.setVisibility(View.GONE);
-                    isOpen = true;
-                }
-                break;
-            }
-            case R.id.ic_search: {
-                handlingIconSearch();
+                drawerLayout.openDrawer(Gravity.LEFT);
                 break;
             }
         }
-    }
-
-    private void handlingIconSearch() {
-        etSearch.setVisibility(View.VISIBLE);
-        ivHome.setImageResource(R.drawable.ic_close);
-        isOpen = false;
     }
 
     @Override
@@ -153,5 +112,4 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     public void onPageScrollStateChanged(int state) {
 
     }
-
 }

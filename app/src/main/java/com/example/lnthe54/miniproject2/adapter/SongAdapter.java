@@ -12,6 +12,7 @@ import com.example.lnthe54.miniproject2.R;
 import com.example.lnthe54.miniproject2.model.Song;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -69,5 +70,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
             tvNameSong.setText(song.getNameSong());
             tvArtistSong.setText(song.getArtistSong());
         }
+    }
+
+    public void updateList(List<Song> newListSong) {
+        listSong = new ArrayList<>();
+        listSong.addAll(newListSong);
+        notifyDataSetChanged();
     }
 }

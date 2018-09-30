@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.lnthe54.miniproject2.R;
 import com.example.lnthe54.miniproject2.model.Artist;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author lnthe54 on 9/29/2018
@@ -67,5 +67,11 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ViewHold
             tvNumberSong.setText(artist.getNumberSong() + SONGS);
             tvNumberAlbum.setText(artist.getNumberAlbums() + ALBUMS);
         }
+    }
+
+    public void updateList(List<Artist> newListArtist) {
+        listArtist = new ArrayList<>();
+        listArtist.addAll(newListArtist);
+        notifyDataSetChanged();
     }
 }

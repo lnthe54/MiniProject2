@@ -11,11 +11,14 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.example.lnthe54.miniproject2.R;
 import com.example.lnthe54.miniproject2.adapter.SongAdapter;
@@ -27,8 +30,8 @@ import java.util.ArrayList;
  * @author lnthe54 on 9/28/2018
  * @project MiniProject2
  */
-public class FragmentSong extends Fragment {
-    private static final String TAG ="FragmentSong" ;
+public class FragmentSong extends Fragment implements SearchView.OnQueryTextListener {
+    private static final String TAG = "FragmentSong";
     private static FragmentSong instance;
 
     private View view;
@@ -47,6 +50,7 @@ public class FragmentSong extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_song, container, false);
+        setHasOptionsMenu(true);
         initView(view);
         showListSong();
         return view;
@@ -60,7 +64,16 @@ public class FragmentSong extends Fragment {
         rvListSong.setHasFixedSize(true);
     }
 
-    private void showListSong(){
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.action_bar_album, menu);
+        MenuItem item = menu.findItem(R.id.icon_search);
+        SearchView searchView = (SearchView) item.getActionView();
+        searchView.setOnQueryTextListener(this);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    private void showListSong() {
         listSong = new ArrayList<>();
         getSongToStorage();
         Log.d(TAG, "showListSong: " + listSong.size());
@@ -68,7 +81,7 @@ public class FragmentSong extends Fragment {
         rvListSong.setAdapter(songAdapter);
     }
 
-    private void getSongToStorage(){
+    private void getSongToStorage() {
         ContentResolver contentResolver = getContext().getContentResolver();
         Uri song = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Cursor songCursor = contentResolver.query(song,
@@ -94,7 +107,7 @@ public class FragmentSong extends Fragment {
         }
     }
 
-    private String getCoverArtPath(long albumId){
+    private String getCoverArtPath(long albumId) {
         Cursor albumCursor = getContext().getContentResolver().query(
                 MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
                 new String[]{MediaStore.Audio.Albums.ALBUM_ART},
@@ -109,5 +122,24 @@ public class FragmentSong extends Fragment {
         }
         albumCursor.close();
         return result;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        String userInput = newText.toLowerCase();
+        ArrayList<Song> newList = new ArrayList<>();
+        for (Song songs : listSong) {
+            if (songs.getNameSong().toLowerCase().contains(userInput)) {
+                newList.add(songs);
+            }
+        }
+
+        songAdapter.updateList(newList);
+        return true;
     }
 }

@@ -11,7 +11,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -25,7 +29,7 @@ import java.util.ArrayList;
  * @author lnthe54 on 9/28/2018
  * @project MiniProject2
  */
-public class FragmentArtists extends Fragment {
+public class FragmentArtists extends Fragment implements SearchView.OnQueryTextListener {
     private static FragmentArtists instance;
     private RecyclerView rvListArtist;
     private ArrayList<Artist> listArtist;
@@ -42,6 +46,7 @@ public class FragmentArtists extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_artist, container, false);
+        setHasOptionsMenu(true);
         initViews(view);
         showListArtist();
         return view;
@@ -62,6 +67,16 @@ public class FragmentArtists extends Fragment {
         rvListArtist.setAdapter(artistsAdapter);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.action_bar_album, menu);
+        MenuItem item = menu.findItem(R.id.icon_search);
+        SearchView searchView = (SearchView) item.getActionView();
+        searchView.setOnQueryTextListener(this);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+
     private void getListArtistToStorage() {
         ContentResolver contentResolver = getContext().getContentResolver();
         Uri artists = MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI;
@@ -80,5 +95,24 @@ public class FragmentArtists extends Fragment {
                 listArtist.add(artist);
             } while (cursor.moveToNext());
         }
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        String userInput = newText.toLowerCase();
+        ArrayList<Artist> newList = new ArrayList<>();
+        for (Artist artist : listArtist) {
+            if (artist.getNameArtist().toLowerCase().contains(userInput)) {
+                newList.add(artist);
+            }
+        }
+
+        artistsAdapter.updateList(newList);
+        return true;
     }
 }

@@ -9,6 +9,11 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/icon_grid"
+        android:icon="@drawable/ic_grid"
+        android:title="@string/grid"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/icon_setting"
         android:title="@string/setting"
         app:showAsAction="never" />
