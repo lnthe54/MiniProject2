@@ -9,10 +9,10 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/icon_grid"
-        android:icon="@drawable/ic_grid"
+        android:id="@+id/icon_convert"
+        android:icon="@drawable/ic_list"
         android:title="@string/grid"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/icon_setting"
         android:title="@string/setting"

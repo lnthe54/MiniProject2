@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,6 +46,7 @@ public class DetailAlbumActivity extends AppCompatActivity {
     private String nameAlbum;
     private String nameArtist;
     private String artAlbum;
+    private int numberOfSong;
     private int totalTime;
 
     @Override
@@ -52,19 +54,23 @@ public class DetailAlbumActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_albums);
 
+        getDataFromIntent();
         initViews();
+        addEvents();
         showData();
     }
 
-    private void initViews() {
+    private void getDataFromIntent() {
         Intent intent = getIntent();
         idAlbum = intent.getIntExtra(Config.ID_ALBUM, 0);
         nameAlbum = intent.getStringExtra(Config.NAME_ALBUM);
         nameArtist = intent.getStringExtra(Config.NAME_ARTIST);
         artAlbum = intent.getStringExtra(Config.IMAGE);
+        numberOfSong = intent.getIntExtra(Config.NUMBER_SONG, 0);
+    }
 
+    private void initViews() {
         toolbar = findViewById(R.id.toolbar);
-
         setTitle(nameAlbum);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -76,27 +82,39 @@ public class DetailAlbumActivity extends AppCompatActivity {
         tvDurationTotal = findViewById(R.id.tv_duration_total);
         tvShuffle = findViewById(R.id.tv_shuffle);
 
-        Glide.with(this).load(artAlbum).into(ivAlbum);
-        Glide.with(this).load(artAlbum).into(ivBg);
-        tvNameAlbum.setText(nameAlbum);
-        tvNameArtist.setText(nameArtist);
-
         rvListSong = findViewById(R.id.list_song_of_album);
         rvListSong.setLayoutManager(new LinearLayoutManager(DetailAlbumActivity.this, LinearLayoutManager.VERTICAL, false));
         rvListSong.setHasFixedSize(true);
     }
 
+    private void addEvents() {
+        Glide.with(this).load(artAlbum).into(ivAlbum);
+        Glide.with(this).load(artAlbum).into(ivBg);
+        tvNameAlbum.setText(nameAlbum);
+        tvNameArtist.setText(nameArtist);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_bar_main, menu);
-        return super.onCreateOptionsMenu(menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                this.finish();
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void showData() {
         listSong = new ArrayList<>();
         getListSongOfAlbum(idAlbum);
         getTimeOfListSong();
-        tvDurationTotal.setText(listSong.size() + " bài hát\t|\t" + ConvertTime.miniSecondToString(totalTime));
+        tvDurationTotal.setText(numberOfSong + " bài hát\t|\t" + ConvertTime.miniSecondToString(totalTime));
         songAdapter = new SongOfAlbumAdapter(listSong);
         rvListSong.setAdapter(songAdapter);
     }

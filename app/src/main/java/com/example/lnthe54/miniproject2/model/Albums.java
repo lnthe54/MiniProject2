@@ -9,12 +9,14 @@ public class Albums {
     private String nameAlbum;
     private String authorAlbum;
     private String albumArt;
+    private int numberSong;
 
-    public Albums(int id, String nameAlbum, String authorAlbum, String albumArt) {
+    public Albums(int id, String nameAlbum, String authorAlbum, String albumArt, int numberSong) {
         this.id = id;
         this.nameAlbum = nameAlbum;
         this.authorAlbum = authorAlbum;
         this.albumArt = albumArt;
+        this.numberSong = numberSong;
     }
 
     public int getId() {
@@ -49,4 +51,7 @@ public class Albums {
         this.albumArt = albumArt;
     }
 
+    public int getNumberSong() {
+        return numberSong;
+    }
 }

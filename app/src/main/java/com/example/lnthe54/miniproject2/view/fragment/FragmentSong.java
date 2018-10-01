@@ -12,7 +12,6 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -66,7 +65,7 @@ public class FragmentSong extends Fragment implements SearchView.OnQueryTextList
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.action_bar_album, menu);
+        inflater.inflate(R.menu.action_bar_main, menu);
         MenuItem item = menu.findItem(R.id.icon_search);
         SearchView searchView = (SearchView) item.getActionView();
         searchView.setOnQueryTextListener(this);
@@ -76,7 +75,6 @@ public class FragmentSong extends Fragment implements SearchView.OnQueryTextList
     private void showListSong() {
         listSong = new ArrayList<>();
         getSongToStorage();
-        Log.d(TAG, "showListSong: " + listSong.size());
         songAdapter = new SongAdapter(listSong);
         rvListSong.setAdapter(songAdapter);
     }

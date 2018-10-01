@@ -9,4 +9,5 @@ public interface Config {
     String NAME_ARTIST = "name artist";
     String IMAGE = "image";
     String NAME_ALBUM = "name album";
+    String NUMBER_SONG = "number song";
 }
