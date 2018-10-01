@@ -85,7 +85,8 @@ public class FragmentArtists extends Fragment implements SearchView.OnQueryTextL
         Uri artists = MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI;
         Cursor cursor = contentResolver.query(artists,
                 new String[]{MediaStore.Audio.Artists.ARTIST, MediaStore.Audio.Artists._ID,
-                        MediaStore.Audio.ArtistColumns.NUMBER_OF_TRACKS, MediaStore.Audio.ArtistColumns.NUMBER_OF_ALBUMS},
+                        MediaStore.Audio.ArtistColumns.NUMBER_OF_TRACKS, MediaStore.Audio.ArtistColumns.NUMBER_OF_ALBUMS,
+                        MediaStore.Audio.Artists.ARTIST_KEY},
                 null, null, MediaStore.Audio.Artists.ARTIST + " ASC");
 
         if (cursor != null && cursor.moveToFirst()) {
@@ -127,6 +128,7 @@ public class FragmentArtists extends Fragment implements SearchView.OnQueryTextL
     private void openDetailArtist(int position) {
         Intent openDetailArtist = new Intent(getContext(), DetailArtistActivity.class);
 
+        int idArtist = listArtist.get(position).getId();
         String nameArtist = listArtist.get(position).getNameArtist();
         int numberOfAlbum = listArtist.get(position).getNumberAlbums();
         int numberOfSong = listArtist.get(position).getNumberSong();
