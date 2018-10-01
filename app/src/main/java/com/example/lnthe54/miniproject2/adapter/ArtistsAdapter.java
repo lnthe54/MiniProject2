@@ -24,8 +24,10 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ViewHold
     private static final String ALBUMS = " album";
 
     private ArrayList<Artist> listArtist;
+    private CallBack callBack;
 
-    public ArtistsAdapter(ArrayList<Artist> listArtist) {
+    public ArtistsAdapter(CallBack callBack, ArrayList<Artist> listArtist) {
+        this.callBack = callBack;
         this.listArtist = listArtist;
     }
 
@@ -60,6 +62,13 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ViewHold
             tvNameArtist = itemView.findViewById(R.id.tv_name_artist);
             tvNumberAlbum = itemView.findViewById(R.id.tv_number_album);
             tvNumberSong = itemView.findViewById(R.id.tv_number_song);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callBack.itemClick(getAdapterPosition());
+                }
+            });
         }
 
         private void bindData(Artist artist) {
@@ -73,5 +82,9 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ViewHold
         listArtist = new ArrayList<>();
         listArtist.addAll(newListArtist);
         notifyDataSetChanged();
+    }
+
+    public interface CallBack {
+        void itemClick(int position);
     }
 }

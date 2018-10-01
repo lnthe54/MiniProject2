@@ -10,4 +10,5 @@ public interface Config {
     String IMAGE = "image";
     String NAME_ALBUM = "name album";
     String NUMBER_SONG = "number song";
+    String NUMBER_ALBUM = "number album";
 }

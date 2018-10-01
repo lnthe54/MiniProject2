@@ -1,6 +1,7 @@
 package com.example.lnthe54.miniproject2.view.fragment;
 
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,6 +23,8 @@ import android.view.ViewGroup;
 import com.example.lnthe54.miniproject2.R;
 import com.example.lnthe54.miniproject2.adapter.ArtistsAdapter;
 import com.example.lnthe54.miniproject2.model.Artist;
+import com.example.lnthe54.miniproject2.ultis.Config;
+import com.example.lnthe54.miniproject2.view.activity.DetailArtistActivity;
 
 import java.util.ArrayList;
 
@@ -29,7 +32,7 @@ import java.util.ArrayList;
  * @author lnthe54 on 9/28/2018
  * @project MiniProject2
  */
-public class FragmentArtists extends Fragment implements SearchView.OnQueryTextListener {
+public class FragmentArtists extends Fragment implements SearchView.OnQueryTextListener, ArtistsAdapter.CallBack {
     private static FragmentArtists instance;
     private RecyclerView rvListArtist;
     private ArrayList<Artist> listArtist;
@@ -63,7 +66,7 @@ public class FragmentArtists extends Fragment implements SearchView.OnQueryTextL
     private void showListArtist() {
         listArtist = new ArrayList<>();
         getListArtistToStorage();
-        artistsAdapter = new ArtistsAdapter(listArtist);
+        artistsAdapter = new ArtistsAdapter(this, listArtist);
         rvListArtist.setAdapter(artistsAdapter);
     }
 
@@ -114,5 +117,24 @@ public class FragmentArtists extends Fragment implements SearchView.OnQueryTextL
 
         artistsAdapter.updateList(newList);
         return true;
+    }
+
+    @Override
+    public void itemClick(int position) {
+        openDetailArtist(position);
+    }
+
+    private void openDetailArtist(int position) {
+        Intent openDetailArtist = new Intent(getContext(), DetailArtistActivity.class);
+
+        String nameArtist = listArtist.get(position).getNameArtist();
+        int numberOfAlbum = listArtist.get(position).getNumberAlbums();
+        int numberOfSong = listArtist.get(position).getNumberSong();
+
+        openDetailArtist.putExtra(Config.NAME_ARTIST, nameArtist);
+        openDetailArtist.putExtra(Config.NUMBER_ALBUM, numberOfAlbum);
+        openDetailArtist.putExtra(Config.NUMBER_SONG, numberOfSong);
+
+        startActivity(openDetailArtist);
     }
 }

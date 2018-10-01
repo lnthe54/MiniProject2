@@ -105,6 +105,7 @@ public class DetailAlbumActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home: {
                 this.finish();
+                break;
             }
         }
         return super.onOptionsItemSelected(item);

@@ -10,11 +10,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.lnthe54.miniproject2.R;
 import com.example.lnthe54.miniproject2.model.Song;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * @author lnthe54 on 9/28/2018
@@ -50,7 +49,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
 
         private TextView tvNameSong;
         private TextView tvArtistSong;
-        private CircleImageView ivSong;
+//        private CircleImageView ivSong;
+
+        private RoundedImageView ivSong;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
