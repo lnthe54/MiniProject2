@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_current_song"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_song" />
+
+    <SeekBar
+        android:id="@+id/seek_bar_current"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/iv_current_song"
+        android:thumb="@null" />
+
+    <TextView
+        android:id="@+id/tv_current_song"
+        style="?android:textAppearanceSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/iv_current_song"
+        android:textColor="@color/colorBlack" />
+
+    <TextView
+        android:id="@+id/tv_current_artist"
+        style="?android:textAppearanceSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_current_song"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/iv_current_song"
+        android:textColor="@color/colorBlack" />
+
+    <ImageView
+        android:id="@+id/ic_previous"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/ic_play_pause"
+        android:src="@drawable/ic_previous" />
+
+    <ImageView
+        android:id="@+id/ic_play_pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/ic_next_track"
+        android:src="@drawable/ic_pause" />
+
+    <ImageView
+        android:id="@+id/ic_next_track"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_next" />
+</RelativeLayout>

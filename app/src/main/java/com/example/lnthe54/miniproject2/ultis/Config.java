@@ -11,4 +11,10 @@ public interface Config {
     String NAME_ALBUM = "name album";
     String NUMBER_SONG = "number song";
     String NUMBER_ALBUM = "number album";
+    String NAME_SONG = "name song";
+    String DURATION = "duration song";
+    String PATH = "path";
+    String IS_PLAYING = "is playing";
+    String LIST_SONG = "list song";
+    String SONG_POSITION = "song position";
 }

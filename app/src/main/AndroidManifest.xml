@@ -21,6 +21,9 @@
         <activity android:name=".view.activity.MainActivity" />
         <activity android:name=".view.activity.DetailAlbumActivity" />
         <activity android:name=".view.activity.DetailArtistActivity" />
+        <activity android:name=".view.activity.PlayMusicActivity" />
+
+        <service android:name=".service.MusicService" />
     </application>
 
 </manifest>

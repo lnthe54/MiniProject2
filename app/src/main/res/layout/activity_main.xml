@@ -7,10 +7,9 @@
     android:layout_height="match_parent"
     tools:context=".view.activity.MainActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -33,6 +32,7 @@
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/toolbar"
             android:background="@color/colorBg"
             android:minHeight="?attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
@@ -42,11 +42,24 @@
 
         <android.support.v4.view.ViewPager
             android:id="@+id/pager"
+            android:layout_below="@id/tab_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></android.support.v4.view.ViewPager>
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:layout_above="@id/layout_current_song"></android.support.v4.view.ViewPager>
+
+        <RelativeLayout
+            android:id="@+id/layout_current_song"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone">
+
+            <include layout="@layout/layout_current_song"></include>
+        </RelativeLayout>
+    </RelativeLayout>
 
     <android.support.design.widget.NavigationView
+        android:id="@+id/navigation"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"

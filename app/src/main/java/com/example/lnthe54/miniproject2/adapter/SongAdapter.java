@@ -20,10 +20,11 @@ import java.util.List;
  * @project MiniProject2
  */
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
-    private static final String TAG = "SongAdapter";
     private ArrayList<Song> listSong;
+    private CallBack callBack;
 
-    public SongAdapter(ArrayList<Song> listSong) {
+    public SongAdapter(CallBack callBack, ArrayList<Song> listSong) {
+        this.callBack = callBack;
         this.listSong = listSong;
     }
 
@@ -59,6 +60,15 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
             ivSong = itemView.findViewById(R.id.iv_song);
             tvNameSong = itemView.findViewById(R.id.tv_name_song);
             tvArtistSong = itemView.findViewById(R.id.tv_artist_song);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (callBack != null) {
+                        callBack.itemClick(getAdapterPosition());
+                    }
+                }
+            });
         }
 
         public void bindData(Song song) {
@@ -77,5 +87,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
         listSong = new ArrayList<>();
         listSong.addAll(newListSong);
         notifyDataSetChanged();
+    }
+
+    public interface CallBack {
+        void itemClick(int position);
     }
 }

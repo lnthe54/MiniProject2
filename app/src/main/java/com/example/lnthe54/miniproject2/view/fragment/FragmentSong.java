@@ -1,6 +1,7 @@
 package com.example.lnthe54.miniproject2.view.fragment;
 
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,20 +23,24 @@ import android.view.ViewGroup;
 import com.example.lnthe54.miniproject2.R;
 import com.example.lnthe54.miniproject2.adapter.SongAdapter;
 import com.example.lnthe54.miniproject2.model.Song;
+import com.example.lnthe54.miniproject2.ultis.Config;
+import com.example.lnthe54.miniproject2.view.activity.PlayMusicActivity;
 
 import java.util.ArrayList;
+
 
 /**
  * @author lnthe54 on 9/28/2018
  * @project MiniProject2
  */
-public class FragmentSong extends Fragment implements SearchView.OnQueryTextListener {
+public class FragmentSong extends Fragment implements SearchView.OnQueryTextListener, SongAdapter.CallBack {
     private static final String TAG = "FragmentSong";
     private static FragmentSong instance;
 
     private View view;
     private RecyclerView rvListSong;
     private ArrayList<Song> listSong;
+    private ArrayList<Song> listSongSend;
     private SongAdapter songAdapter;
 
     public static FragmentSong getInstance() {
@@ -50,6 +55,7 @@ public class FragmentSong extends Fragment implements SearchView.OnQueryTextList
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_song, container, false);
         setHasOptionsMenu(true);
+
         initView(view);
         showListSong();
         return view;
@@ -75,7 +81,7 @@ public class FragmentSong extends Fragment implements SearchView.OnQueryTextList
     private void showListSong() {
         listSong = new ArrayList<>();
         getSongToStorage();
-        songAdapter = new SongAdapter(listSong);
+        songAdapter = new SongAdapter(this, listSong);
         rvListSong.setAdapter(songAdapter);
     }
 
@@ -140,4 +146,24 @@ public class FragmentSong extends Fragment implements SearchView.OnQueryTextList
         songAdapter.updateList(newList);
         return true;
     }
+
+    @Override
+    public void itemClick(int position) {
+        openPlayMusicActivity(position);
+    }
+
+    private void openPlayMusicActivity(int position) {
+        Intent openPlayMusicActivity = new Intent(getContext(), PlayMusicActivity.class);
+
+        listSongSend = (ArrayList<Song>) listSong.clone();
+        int songPosition = position;
+
+        openPlayMusicActivity.putExtra(Config.SONG_POSITION, songPosition);
+        openPlayMusicActivity.putExtra(Config.IS_PLAYING, false);
+        openPlayMusicActivity.putExtra(Config.PATH, listSong.get(position).getPath());
+        openPlayMusicActivity.putExtra(Config.LIST_SONG, listSongSend);
+
+        startActivity(openPlayMusicActivity);
+    }
+
 }
