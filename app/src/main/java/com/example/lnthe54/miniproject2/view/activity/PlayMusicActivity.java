@@ -28,6 +28,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.lnthe54.miniproject2.R;
 import com.example.lnthe54.miniproject2.model.Song;
+import com.example.lnthe54.miniproject2.presenter.PlayMusicPresenter;
 import com.example.lnthe54.miniproject2.service.MusicService;
 import com.example.lnthe54.miniproject2.utils.AppController;
 import com.example.lnthe54.miniproject2.utils.BlurImage;
@@ -44,7 +45,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * @author lnthe54 on 10/2/2018
  * @project MiniProject2
  */
-public class PlayMusicActivity extends AppCompatActivity implements View.OnClickListener {
+public class PlayMusicActivity extends AppCompatActivity
+        implements View.OnClickListener, PlayMusicPresenter.CallBack {
 
     private Toolbar toolbar;
     private CircleImageView ivPlaying;
@@ -72,40 +74,43 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
     private boolean isSeeking;
 
     private MusicService musicService;
+    private static PlayMusicPresenter musicPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_music);
 
+        musicPresenter = new PlayMusicPresenter(this);
         AppController.getInstance().setPlayMusicActivity(this);
         musicService = (MusicService) AppController.getInstance().getMusicService();
 
-        getDataFromIntent();
+        musicPresenter.getDataFromIntent();
         initViews();
 
         if (musicService == null) {
             initService();
         } else {
 
-            updateSeekBar();
+            musicPresenter.updateSeekBar();
             totalTimeSong = musicService.getTotalTime();
-            updateData();
+            musicPresenter.updateData();
             if (!isPlaying) {
-                playMusic();
+                musicPresenter.playMusic();
             }
 
-            updateShuffle();
-            updatePlayPause();
-            updateRepeat();
+            musicPresenter.updateShuffle();
+            musicPresenter.updatePlayPause();
+            musicPresenter.updateRepeat();
 
         }
         addEvents();
         registerBroadcastSongComplete();
-        updateMainActivity();
+        musicPresenter.updateMainActivity();
     }
 
-    private void getDataFromIntent() {
+    @Override
+    public void getDataFromIntent() {
         Intent intent = getIntent();
         isPlaying = intent.getExtras().getBoolean(Config.IS_PLAYING);
 
@@ -142,7 +147,7 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void addEvents() {
-        updateData();
+        musicPresenter.updateData();
 
         ivRepeat.setOnClickListener(this);
         ivShuffle.setOnClickListener(this);
@@ -170,7 +175,7 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
                 }
 
                 isSeeking = false;
-                updateSeekBar();
+                musicPresenter.updateSeekBar();
             }
         });
     }
@@ -187,8 +192,8 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
             musicService = binder.getInstanceBoundService();
             AppController.getInstance().setMusicService(musicService);
             musicService.setRepeat(false);
-            playMusic();
-            updateSeekBar();
+            musicPresenter.playMusic();
+            musicPresenter.updateSeekBar();
             totalTimeSong = musicService.getTotalTime();
         }
 
@@ -200,10 +205,10 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
     BroadcastReceiver broadcastReceiverSongCompleted = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            nextMusic();
+            musicPresenter.nextMusic();
             totalTimeSong = musicService.getTotalTime();
-            updateSeekBar();
-            updateMainActivity();
+            musicPresenter.updateSeekBar();
+            musicPresenter.updateMainActivity();
             Common.updateMainActivity();
         }
     };
@@ -218,7 +223,8 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
         unregisterReceiver(broadcastReceiverSongCompleted);
     }
 
-    private void updateData() {
+    @Override
+    public void updateData() {
         nameSong = listSong.get(currentPosition).getNameSong();
         nameArtist = listSong.get(currentPosition).getArtistSong();
         artSong = listSong.get(currentPosition).getAlbumImage();
@@ -249,12 +255,14 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
         tvTotalTime.setText(ConvertTime.miniSecondToString(totalTimeSong));
     }
 
-    private void updateMainActivity() {
+    @Override
+    public void updateMainActivity() {
         Intent intent = new Intent(ConfigAction.ACTION_UPDATE_PlAY_STATUS);
         sendBroadcast(intent);
     }
 
-    private void updatePlayPause() {
+    @Override
+    public void updatePlayPause() {
         if (musicService != null) {
             if (musicService.isPlaying()) {
                 ivPlayPause.setImageResource(R.drawable.ic_pause);
@@ -264,6 +272,7 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
+    @Override
     public void updateShuffle() {
         if (musicService.isShuffle()) {
             ivShuffle.setImageResource(R.drawable.ic_shuffle_on);
@@ -272,6 +281,7 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
+    @Override
     public void updateRepeat() {
         if (musicService.isRepeat()) {
             ivRepeat.setImageResource(R.drawable.ic_repeat_on);
@@ -280,7 +290,8 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    private void updateSeekBar() {
+    @Override
+    public void updateSeekBar() {
         seekBarPlaying.setMax(totalTimeSong);
         int currentLength = musicService.getCurrentLength();
 
@@ -294,11 +305,12 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
         musicHandler.post(new Runnable() {
             @Override
             public void run() {
-                updateSeekBar();
+                musicPresenter.updateSeekBar();
             }
         });
     }
 
+    @Override
     public void playMusic() {
         musicService.play(path);
         totalTimeSong = musicService.getTotalTime();
@@ -307,10 +319,11 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
 
         Intent openService = new Intent(PlayMusicActivity.this, MusicService.class);
         startService(openService);
-        updateData();
-        updateMainActivity();
+        musicPresenter.updateData();
+        musicPresenter.updateMainActivity();
     }
 
+    @Override
     public void playPauseMusic() {
         if (musicService.isPlaying()) {
             ivPlayPause.setImageResource(R.drawable.ic_play);
@@ -319,22 +332,24 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
             ivPlayPause.setImageResource(R.drawable.ic_pause);
             musicService.resume();
         }
-        updateMainActivity();
+        musicPresenter.updateMainActivity();
     }
 
-    public void nextMusic() {
+    @Override
+    public void next() {
         if (!musicService.isRepeat()) {
             currentPosition = musicService.getNextPosition();
             path = listSong.get(currentPosition).getPath();
         }
 
-        playMusic();
+        musicPresenter.playMusic();
     }
 
-    public void backMusic() {
+    @Override
+    public void back() {
         currentPosition = musicService.getPreviousPosition();
         path = listSong.get(currentPosition).getPath();
-        playMusic();
+        musicPresenter.playMusic();
     }
 
     @Override
@@ -373,17 +388,17 @@ public class PlayMusicActivity extends AppCompatActivity implements View.OnClick
                 break;
             }
             case R.id.iv_previous: {
-                backMusic();
+                musicPresenter.previousMusic();
                 ivPlayPause.setImageResource(R.drawable.ic_pause);
                 break;
             }
             case R.id.iv_pause_play: {
-                playPauseMusic();
+                musicPresenter.playPauseMusic();
                 break;
             }
 
             case R.id.iv_next: {
-                nextMusic();
+                musicPresenter.nextMusic();
                 ivPlayPause.setImageResource(R.drawable.ic_pause);
                 break;
             }

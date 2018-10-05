@@ -57,11 +57,11 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginRight="5dp"
-        android:layout_toLeftOf="@id/ic_next_track"
+        android:layout_toLeftOf="@id/ic_next"
         android:src="@drawable/pause_btn" />
 
     <ImageView
-        android:id="@+id/ic_next_track"
+        android:id="@+id/ic_next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"

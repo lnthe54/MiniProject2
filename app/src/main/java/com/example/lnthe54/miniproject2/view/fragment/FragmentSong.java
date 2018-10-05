@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import com.example.lnthe54.miniproject2.R;
 import com.example.lnthe54.miniproject2.adapter.SongAdapter;
 import com.example.lnthe54.miniproject2.model.Song;
+import com.example.lnthe54.miniproject2.presenter.FrgSongPresenter;
 import com.example.lnthe54.miniproject2.utils.Config;
 import com.example.lnthe54.miniproject2.view.activity.PlayMusicActivity;
 
@@ -33,7 +34,7 @@ import java.util.ArrayList;
  * @author lnthe54 on 9/28/2018
  * @project MiniProject2
  */
-public class FragmentSong extends Fragment implements SearchView.OnQueryTextListener, SongAdapter.CallBack {
+public class FragmentSong extends Fragment implements SearchView.OnQueryTextListener, SongAdapter.CallBack, FrgSongPresenter.CallBack {
     private static final String TAG = "FragmentSong";
     private static FragmentSong instance;
 
@@ -42,6 +43,8 @@ public class FragmentSong extends Fragment implements SearchView.OnQueryTextList
     private ArrayList<Song> listSong;
     private ArrayList<Song> listSongSend;
     private SongAdapter songAdapter;
+
+    private FrgSongPresenter frgSongPresenter;
 
     public static FragmentSong getInstance() {
         if (instance == null) {
@@ -62,6 +65,7 @@ public class FragmentSong extends Fragment implements SearchView.OnQueryTextList
     }
 
     private void initView(View view) {
+        frgSongPresenter = new FrgSongPresenter(this);
         rvListSong = view.findViewById(R.id.list_song);
         rvListSong.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         DividerItemDecoration divider = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
@@ -80,12 +84,13 @@ public class FragmentSong extends Fragment implements SearchView.OnQueryTextList
 
     private void showListSong() {
         listSong = new ArrayList<>();
-        getSongToStorage();
+        frgSongPresenter.getSongFromStorage();
         songAdapter = new SongAdapter(this, listSong);
         rvListSong.setAdapter(songAdapter);
     }
 
-    private void getSongToStorage() {
+    @Override
+    public void getSongFromStorage() {
         ContentResolver contentResolver = getContext().getContentResolver();
         Uri song = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Cursor songCursor = contentResolver.query(song,
@@ -103,7 +108,7 @@ public class FragmentSong extends Fragment implements SearchView.OnQueryTextList
                 int currentDuration = songCursor.getInt(songCursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
                 String albumPath = songCursor.getString(songCursor.getColumnIndex(MediaStore.Audio.Media.DATA));
                 long albumID = songCursor.getLong(songCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
-                String albumArt = getCoverArtPath(albumID);
+                String albumArt = frgSongPresenter.getImageAlbum(albumID);
 
                 listSong.add(new Song(currentId, currentTitle, currentArtists, currentAlbum, albumArt, currentDuration, albumPath));
 
@@ -111,7 +116,8 @@ public class FragmentSong extends Fragment implements SearchView.OnQueryTextList
         }
     }
 
-    private String getCoverArtPath(long albumId) {
+    @Override
+    public String getImageAlbum(long albumId) {
         Cursor albumCursor = getContext().getContentResolver().query(
                 MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
                 new String[]{MediaStore.Audio.Albums.ALBUM_ART},
@@ -149,10 +155,11 @@ public class FragmentSong extends Fragment implements SearchView.OnQueryTextList
 
     @Override
     public void itemClick(int position) {
-        openPlayMusicActivity(position);
+        frgSongPresenter.openPlayMusicActivity(position);
     }
 
-    private void openPlayMusicActivity(int position) {
+    @Override
+    public void openPlayMusicActivity(int position) {
         Intent openPlayMusicActivity = new Intent(getContext(), PlayMusicActivity.class);
 
         listSongSend = (ArrayList<Song>) listSong.clone();

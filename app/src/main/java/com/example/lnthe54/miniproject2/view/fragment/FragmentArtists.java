@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import com.example.lnthe54.miniproject2.R;
 import com.example.lnthe54.miniproject2.adapter.ArtistsAdapter;
 import com.example.lnthe54.miniproject2.model.Artist;
+import com.example.lnthe54.miniproject2.presenter.FrgArtistPresenter;
 import com.example.lnthe54.miniproject2.utils.Config;
 import com.example.lnthe54.miniproject2.view.activity.DetailArtistActivity;
 
@@ -32,11 +33,14 @@ import java.util.ArrayList;
  * @author lnthe54 on 9/28/2018
  * @project MiniProject2
  */
-public class FragmentArtists extends Fragment implements SearchView.OnQueryTextListener, ArtistsAdapter.CallBack {
+public class FragmentArtists extends Fragment
+        implements SearchView.OnQueryTextListener, ArtistsAdapter.CallBack, FrgArtistPresenter.CallBack {
     private static FragmentArtists instance;
     private RecyclerView rvListArtist;
     private ArrayList<Artist> listArtist;
     private ArtistsAdapter artistsAdapter;
+
+    private FrgArtistPresenter frgArtistPresenter;
 
     public static FragmentArtists getInstance() {
         if (instance == null) {
@@ -49,6 +53,7 @@ public class FragmentArtists extends Fragment implements SearchView.OnQueryTextL
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_artist, container, false);
+        frgArtistPresenter = new FrgArtistPresenter(this);
         setHasOptionsMenu(true);
         initViews(view);
         showListArtist();
@@ -65,7 +70,7 @@ public class FragmentArtists extends Fragment implements SearchView.OnQueryTextL
 
     private void showListArtist() {
         listArtist = new ArrayList<>();
-        getListArtistToStorage();
+        frgArtistPresenter.getArtistFromStorage();
         artistsAdapter = new ArtistsAdapter(this, listArtist);
         rvListArtist.setAdapter(artistsAdapter);
     }
@@ -79,8 +84,8 @@ public class FragmentArtists extends Fragment implements SearchView.OnQueryTextL
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-
-    private void getListArtistToStorage() {
+    @Override
+    public void getListArtistFromStorage() {
         ContentResolver contentResolver = getContext().getContentResolver();
         Uri artists = MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI;
         Cursor cursor = contentResolver.query(artists,
@@ -122,13 +127,13 @@ public class FragmentArtists extends Fragment implements SearchView.OnQueryTextL
 
     @Override
     public void itemClick(int position) {
-        openDetailArtist(position);
+        frgArtistPresenter.openDetailArtistActivity(position);
     }
 
-    private void openDetailArtist(int position) {
+    @Override
+    public void openDetailArtistActivity(int position) {
         Intent openDetailArtist = new Intent(getContext(), DetailArtistActivity.class);
 
-        int idArtist = listArtist.get(position).getId();
         String nameArtist = listArtist.get(position).getNameArtist();
         int numberOfAlbum = listArtist.get(position).getNumberAlbums();
         int numberOfSong = listArtist.get(position).getNumberSong();

@@ -23,6 +23,7 @@ import com.example.lnthe54.miniproject2.R;
 import com.example.lnthe54.miniproject2.adapter.AlbumAdapter;
 import com.example.lnthe54.miniproject2.adapter.ListAlbumAdapter;
 import com.example.lnthe54.miniproject2.model.Albums;
+import com.example.lnthe54.miniproject2.presenter.FrgAlbumPresenter;
 import com.example.lnthe54.miniproject2.utils.Config;
 import com.example.lnthe54.miniproject2.view.activity.DetailAlbumActivity;
 
@@ -32,7 +33,8 @@ import java.util.ArrayList;
  * @author lnthe54 on 9/28/2018
  * @project MiniProject2
  */
-public class FragmentAlbums extends Fragment implements AlbumAdapter.CallBack, ListAlbumAdapter.CallBack {
+public class FragmentAlbums extends Fragment
+        implements AlbumAdapter.CallBack, ListAlbumAdapter.CallBack, FrgAlbumPresenter.CallBack {
     private static FragmentAlbums instance;
     private static final int SPAN_COUNT = 3;
     private RecyclerView rvListAlbum;
@@ -40,6 +42,8 @@ public class FragmentAlbums extends Fragment implements AlbumAdapter.CallBack, L
     private ListAlbumAdapter listAlbumAdapter;
     private ArrayList<Albums> listAlbum;
     private boolean isGrid = true;
+
+    private FrgAlbumPresenter frgAlbumPresenter;
 
     public static FragmentAlbums getInstance() {
         if (instance == null) {
@@ -52,6 +56,7 @@ public class FragmentAlbums extends Fragment implements AlbumAdapter.CallBack, L
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_albums, container, false);
+        frgAlbumPresenter = new FrgAlbumPresenter(this);
         setHasOptionsMenu(true);
         initViews(view);
         showListAlbum();
@@ -68,12 +73,17 @@ public class FragmentAlbums extends Fragment implements AlbumAdapter.CallBack, L
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.action_bar_album, menu);
         MenuItem itemConvert = menu.findItem(R.id.icon_convert);
-        if (isGrid) {
-            itemConvert.setIcon(R.drawable.ic_list);
-        } else {
-            itemConvert.setIcon(R.drawable.ic_grid);
-        }
+        frgAlbumPresenter.changeIconConvert(itemConvert);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void changeIconConvert(MenuItem item) {
+        if (isGrid) {
+            item.setIcon(R.drawable.ic_list);
+        } else {
+            item.setIcon(R.drawable.ic_grid);
+        }
     }
 
     @Override
@@ -109,12 +119,13 @@ public class FragmentAlbums extends Fragment implements AlbumAdapter.CallBack, L
 
     private void showListAlbum() {
         listAlbum = new ArrayList<>();
-        getAlbumToStorage();
+        frgAlbumPresenter.getAlbumFromStorage();
         albumAdapter = new AlbumAdapter(this, listAlbum);
         rvListAlbum.setAdapter(albumAdapter);
     }
 
-    private void getAlbumToStorage() {
+    @Override
+    public void getAlbumFromStorage() {
         ContentResolver contentResolver = getContext().getContentResolver();
         Uri album = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI;
         Cursor cursor = contentResolver.query(album,
@@ -138,15 +149,16 @@ public class FragmentAlbums extends Fragment implements AlbumAdapter.CallBack, L
 
     @Override
     public void itemClickGrid(int position) {
-        openDetailAlbum(position);
+        frgAlbumPresenter.openDetailAlbumActivity(position);
     }
 
     @Override
     public void itemClickList(int position) {
-        openDetailAlbum(position);
+        frgAlbumPresenter.openDetailAlbumActivity(position);
     }
 
-    private void openDetailAlbum(int position) {
+    @Override
+    public void openDetailAlbumActivity(int position) {
         Intent openDetailAlbum = new Intent(getContext(), DetailAlbumActivity.class);
 
         int idAlbum = listAlbum.get(position).getId();
@@ -162,6 +174,7 @@ public class FragmentAlbums extends Fragment implements AlbumAdapter.CallBack, L
         openDetailAlbum.putExtra(Config.NUMBER_SONG, numberOfSong);
 
         startActivity(openDetailAlbum);
+        getActivity().overridePendingTransition(R.anim.slide_right, R.anim.no_change);
     }
 
 }

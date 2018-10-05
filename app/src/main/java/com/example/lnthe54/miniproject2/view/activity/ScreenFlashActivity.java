@@ -20,10 +20,10 @@ public class ScreenFlashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_screen_flash);
 
-        new Handler().postDelayed(new Runnable(){
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent openMainActivity = new Intent(ScreenFlashActivity.this,MainActivity.class);
+                Intent openMainActivity = new Intent(ScreenFlashActivity.this, MainActivity.class);
                 startActivity(openMainActivity);
                 finish();
             }

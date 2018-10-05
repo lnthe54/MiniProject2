@@ -19,8 +19,10 @@ import java.util.ArrayList;
  */
 public class SongOfAlbumAdapter extends RecyclerView.Adapter<SongOfAlbumAdapter.ViewHolder> {
     private ArrayList<Song> listSong;
+    private CallBack callBack;
 
-    public SongOfAlbumAdapter(ArrayList<Song> listSong) {
+    public SongOfAlbumAdapter(CallBack callBack, ArrayList<Song> listSong) {
+        this.callBack = callBack;
         this.listSong = listSong;
     }
 
@@ -58,6 +60,13 @@ public class SongOfAlbumAdapter extends RecyclerView.Adapter<SongOfAlbumAdapter.
             tvNameSong = itemView.findViewById(R.id.tv_name_song);
             tvArtistSong = itemView.findViewById(R.id.tv_artist_song);
             tvDuration = itemView.findViewById(R.id.tv_duration);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callBack.itemClick(getAdapterPosition());
+                }
+            });
         }
 
         public void bindData(Song song) {
@@ -67,5 +76,9 @@ public class SongOfAlbumAdapter extends RecyclerView.Adapter<SongOfAlbumAdapter.
             duration = song.getDuration() / 1000;
             tvDuration.setText(ConvertTime.miniSecondToString(duration));
         }
+    }
+
+    public interface CallBack {
+        void itemClick(int position);
     }
 }

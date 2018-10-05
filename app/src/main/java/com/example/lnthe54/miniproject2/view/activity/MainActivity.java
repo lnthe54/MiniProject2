@@ -29,6 +29,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.lnthe54.miniproject2.R;
 import com.example.lnthe54.miniproject2.adapter.ViewPagerAdapter;
+import com.example.lnthe54.miniproject2.presenter.MainPresenter;
 import com.example.lnthe54.miniproject2.service.MusicService;
 import com.example.lnthe54.miniproject2.utils.AppController;
 import com.example.lnthe54.miniproject2.utils.Config;
@@ -36,7 +37,7 @@ import com.example.lnthe54.miniproject2.utils.ConfigAction;
 
 public class MainActivity extends AppCompatActivity
         implements ViewPager.OnPageChangeListener, View.OnClickListener,
-        NavigationView.OnNavigationItemSelectedListener {
+        NavigationView.OnNavigationItemSelectedListener, MainPresenter.CallBack {
 
     private String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE};
@@ -51,9 +52,13 @@ public class MainActivity extends AppCompatActivity
     private TextView tvCurrentSong;
     private TextView tvCurrentArtist;
     private ImageView ivCurrentSong;
+    private ImageView ivHome;
+    private ImageView ivPrevious;
+    private ImageView ivNext;
+    private ImageView ivPlayPause;
     private MusicService musicService;
 
-    private int totalTime;
+    private MainPresenter mainPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +74,7 @@ public class MainActivity extends AppCompatActivity
         initViews();
 
         if (musicService != null) {
-            showCurrentSong();
+            mainPresenter.showCurrentSong();
         }
         registerBroadcastUpdatePlaying();
         addEvents();
@@ -110,12 +115,10 @@ public class MainActivity extends AppCompatActivity
             }
             showCurrentSong();
             if (musicService != null) {
-                totalTime = musicService.getTotalTime();
-//                updateSeekBar();
                 if (musicService.isPlaying()) {
-//                    ivPlayPause.setImageResource(R.drawable.pause_button);
+                    ivPlayPause.setImageResource(R.drawable.pause_btn);
                 } else {
-//                    ivPlayPause.setImageResource(R.drawable.play_button);
+                    ivPlayPause.setImageResource(R.drawable.play_btn);
                 }
             }
         }
@@ -131,11 +134,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initViews() {
+        mainPresenter = new MainPresenter(this);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home);
+
+        ivHome = findViewById(R.id.ic_home);
 
         drawerLayout = findViewById(R.id.drawer_layout);
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
@@ -160,10 +164,17 @@ public class MainActivity extends AppCompatActivity
         ivCurrentSong = findViewById(R.id.iv_current_song);
         tvCurrentSong = findViewById(R.id.tv_current_song);
         tvCurrentArtist = findViewById(R.id.tv_current_artist);
+        ivPrevious = findViewById(R.id.ic_previous);
+        ivPlayPause = findViewById(R.id.ic_play_pause);
+        ivNext = findViewById(R.id.ic_next);
     }
 
     private void addEvents() {
+        ivHome.setOnClickListener(this);
         layoutCurrentSong.setOnClickListener(this);
+        ivPrevious.setOnClickListener(this);
+        ivPlayPause.setOnClickListener(this);
+        ivNext.setOnClickListener(this);
     }
 
     private void addPagerAdapter() {
@@ -175,25 +186,30 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home: {
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.ic_home: {
                 drawerLayout.openDrawer(Gravity.LEFT);
                 break;
             }
-        }
-        return true;
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case android.R.id.home: {
-
-            }
 
             case R.id.layout_current_song: {
-                clickLayoutPlaying();
+                mainPresenter.clickLayoutCurrentSong();
+                break;
+            }
+
+            case R.id.ic_previous: {
+                mainPresenter.clickBtnPrevious();
+                break;
+            }
+
+            case R.id.ic_play_pause: {
+                mainPresenter.clickBtnPlayPause();
+                break;
+            }
+
+            case R.id.ic_next: {
+                mainPresenter.clickBtnNext();
                 break;
             }
         }
@@ -238,6 +254,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
     public void showCurrentSong() {
         if (musicService != null) {
             if (musicService.getCurrentSong().getAlbumImage() != null) {
@@ -252,17 +269,44 @@ public class MainActivity extends AppCompatActivity
             ivCurrentSong.startAnimation(rotate);
             tvCurrentSong.setText(musicService.getCurrentSong().getNameSong());
             tvCurrentArtist.setText(musicService.getCurrentSong().getArtistSong());
-
         }
     }
 
-    private void clickLayoutPlaying() {
+    @Override
+    public void clickLayoutPlaying() {
         if (musicService != null) {
             Intent openPlay = new Intent(MainActivity.this, PlayMusicActivity.class);
             openPlay.putExtra(Config.IS_PLAYING, true);
             startActivity(openPlay);
             this.overridePendingTransition(R.anim.slide_up, R.anim.no_change);
         }
+    }
+
+    @Override
+    public void clickBtnPrevious() {
+        if (musicService.isPlaying()) {
+            musicService.back();
+        }
+        mainPresenter.showCurrentSong();
+    }
+
+    @Override
+    public void clickBtnPlayPause() {
+        if (musicService.isPlaying()) {
+            ivPlayPause.setImageResource(R.drawable.play_btn);
+            musicService.pause();
+        } else {
+            ivPlayPause.setImageResource(R.drawable.pause_btn);
+            musicService.resume();
+        }
+    }
+
+    @Override
+    public void clickBtnNext() {
+        if (musicService.isPlaying()) {
+            musicService.next();
+        }
+        mainPresenter.showCurrentSong();
     }
 
     @Override

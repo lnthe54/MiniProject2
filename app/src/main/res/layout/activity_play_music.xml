@@ -12,7 +12,11 @@
         android:layout_height="wrap_content"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"></android.support.v7.widget.Toolbar>
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:titleTextAppearance="@style/SizeTitle"
+        app:subtitleTextAppearance="@style/SizeSubTitle">
+
+    </android.support.v7.widget.Toolbar>
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_playing"
@@ -44,7 +48,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/tv_time_total"
-            android:layout_toRightOf="@id/tv_time_played" />
+            android:layout_toRightOf="@id/tv_time_played"
+            android:thumbTint="@color/colorBg" />
 
         <TextView
             android:id="@+id/tv_time_total"
@@ -62,48 +67,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/layout_seek_bar"
         android:layout_marginTop="20dp"
-        android:orientation="horizontal"
-        android:padding="5dp"
-        android:weightSum="5">
+        android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/iv_shuffle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:src="@drawable/ic_shuffle_off" />
-
-        <ImageView
-            android:id="@+id/iv_previous"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:src="@drawable/previous_track_btn" />
-
-        <ImageView
-            android:id="@+id/iv_pause_play"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:src="@drawable/ic_pause" />
-
-        <ImageView
-            android:id="@+id/iv_next"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:src="@drawable/next_track_btn" />
-
-        <ImageView
-            android:id="@+id/iv_repeat"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:src="@drawable/ic_repeat_off" />
+        <include layout="@layout/layout_control_music" />
     </LinearLayout>
 </RelativeLayout>
