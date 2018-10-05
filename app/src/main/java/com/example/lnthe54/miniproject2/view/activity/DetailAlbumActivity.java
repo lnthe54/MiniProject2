@@ -18,8 +18,8 @@ import com.bumptech.glide.Glide;
 import com.example.lnthe54.miniproject2.R;
 import com.example.lnthe54.miniproject2.adapter.SongOfAlbumAdapter;
 import com.example.lnthe54.miniproject2.model.Song;
-import com.example.lnthe54.miniproject2.ultis.Config;
-import com.example.lnthe54.miniproject2.ultis.ConvertTime;
+import com.example.lnthe54.miniproject2.utils.Config;
+import com.example.lnthe54.miniproject2.utils.ConvertTime;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
@@ -88,8 +88,14 @@ public class DetailAlbumActivity extends AppCompatActivity {
     }
 
     private void addEvents() {
-        Glide.with(this).load(artAlbum).into(ivAlbum);
-        Glide.with(this).load(artAlbum).into(ivBg);
+        if (artAlbum != null) {
+            Glide.with(this).load(artAlbum).into(ivAlbum);
+            Glide.with(this).load(artAlbum).into(ivBg);
+        } else {
+            ivBg.setImageResource(R.drawable.ic_album_default);
+            ivAlbum.setImageResource(R.drawable.ic_album_default);
+        }
+
         tvNameAlbum.setText(nameAlbum);
         tvNameArtist.setText(nameArtist);
     }

@@ -23,7 +23,7 @@ import android.view.ViewGroup;
 import com.example.lnthe54.miniproject2.R;
 import com.example.lnthe54.miniproject2.adapter.ArtistsAdapter;
 import com.example.lnthe54.miniproject2.model.Artist;
-import com.example.lnthe54.miniproject2.ultis.Config;
+import com.example.lnthe54.miniproject2.utils.Config;
 import com.example.lnthe54.miniproject2.view.activity.DetailArtistActivity;
 
 import java.util.ArrayList;

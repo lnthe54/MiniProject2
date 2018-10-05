@@ -23,7 +23,7 @@ import android.view.ViewGroup;
 import com.example.lnthe54.miniproject2.R;
 import com.example.lnthe54.miniproject2.adapter.SongAdapter;
 import com.example.lnthe54.miniproject2.model.Song;
-import com.example.lnthe54.miniproject2.ultis.Config;
+import com.example.lnthe54.miniproject2.utils.Config;
 import com.example.lnthe54.miniproject2.view.activity.PlayMusicActivity;
 
 import java.util.ArrayList;
@@ -164,6 +164,7 @@ public class FragmentSong extends Fragment implements SearchView.OnQueryTextList
         openPlayMusicActivity.putExtra(Config.LIST_SONG, listSongSend);
 
         startActivity(openPlayMusicActivity);
+        getActivity().overridePendingTransition(R.anim.slide_up, R.anim.no_change);
     }
 
 }

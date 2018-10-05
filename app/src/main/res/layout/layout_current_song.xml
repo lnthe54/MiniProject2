@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#e8e8e8"
     android:padding="5dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -11,21 +12,19 @@
         android:layout_centerVertical="true"
         android:src="@drawable/ic_song" />
 
-    <SeekBar
-        android:id="@+id/seek_bar_current"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_toRightOf="@id/iv_current_song"
-        android:thumb="@null" />
-
     <TextView
         android:id="@+id/tv_current_song"
         style="?android:textAppearanceSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toLeftOf="@id/ic_previous"
         android:layout_toRightOf="@id/iv_current_song"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/song"
         android:textColor="@color/colorBlack" />
 
     <TextView
@@ -35,7 +34,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_current_song"
         android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@id/ic_previous"
         android:layout_toRightOf="@id/iv_current_song"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/artist"
         android:textColor="@color/colorBlack" />
 
     <ImageView
@@ -43,6 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
         android:layout_toLeftOf="@id/ic_play_pause"
         android:src="@drawable/ic_previous" />
 
@@ -51,8 +56,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
         android:layout_toLeftOf="@id/ic_next_track"
-        android:src="@drawable/ic_pause" />
+        android:src="@drawable/pause_btn" />
 
     <ImageView
         android:id="@+id/ic_next_track"

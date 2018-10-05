@@ -23,7 +23,7 @@ import com.example.lnthe54.miniproject2.R;
 import com.example.lnthe54.miniproject2.adapter.AlbumAdapter;
 import com.example.lnthe54.miniproject2.adapter.ListAlbumAdapter;
 import com.example.lnthe54.miniproject2.model.Albums;
-import com.example.lnthe54.miniproject2.ultis.Config;
+import com.example.lnthe54.miniproject2.utils.Config;
 import com.example.lnthe54.miniproject2.view.activity.DetailAlbumActivity;
 
 import java.util.ArrayList;

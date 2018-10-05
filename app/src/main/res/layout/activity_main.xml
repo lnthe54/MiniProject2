@@ -18,15 +18,7 @@
             android:background="@color/colorBg"
             android:minHeight="?attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-
-            <ImageView
-                android:id="@+id/ic_home"
-                style="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_home" />
-        </android.support.v7.widget.Toolbar>
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"></android.support.v7.widget.Toolbar>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tab_layout"
@@ -42,10 +34,10 @@
 
         <android.support.v4.view.ViewPager
             android:id="@+id/pager"
-            android:layout_below="@id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/layout_current_song"></android.support.v4.view.ViewPager>
+            android:layout_above="@id/layout_current_song"
+            android:layout_below="@id/tab_layout"></android.support.v4.view.ViewPager>
 
         <RelativeLayout
             android:id="@+id/layout_current_song"

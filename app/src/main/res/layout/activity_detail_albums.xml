@@ -25,12 +25,13 @@
                 android:id="@+id/iv_album_bg"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:scaleType="fitXY" />
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_album_default" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:background="#60000000"/>
+                android:background="#60000000" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"

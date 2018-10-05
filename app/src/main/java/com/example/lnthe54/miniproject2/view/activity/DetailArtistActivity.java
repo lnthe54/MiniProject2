@@ -19,7 +19,7 @@ import com.example.lnthe54.miniproject2.adapter.AlbumAdapter;
 import com.example.lnthe54.miniproject2.adapter.SongOfAlbumAdapter;
 import com.example.lnthe54.miniproject2.model.Albums;
 import com.example.lnthe54.miniproject2.model.Song;
-import com.example.lnthe54.miniproject2.ultis.Config;
+import com.example.lnthe54.miniproject2.utils.Config;
 
 import java.util.ArrayList;
 

@@ -21,4 +21,6 @@
     <string name="favourite">Nhạc Yêu Thích</string>
     <string name="shuffle">Nghe Ngẫu Nhiên</string>
     <string name="grid">Grid</string>
+    <string name="expand">Expand</string>
+    <string name="share">Share</string>
 </resources>

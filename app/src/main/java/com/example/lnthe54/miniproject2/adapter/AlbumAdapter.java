@@ -47,7 +47,6 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        //        private ImageView ivAlbum;
         private RoundedImageView ivAlbum;
         private TextView tvNameAlbum;
         private TextView tvAuthorAlbum;

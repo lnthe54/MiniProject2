@@ -1,4 +1,4 @@
-package com.example.lnthe54.miniproject2.ultis;
+package com.example.lnthe54.miniproject2.utils;
 
 /**
  * @author lnthe54 on 9/30/2018

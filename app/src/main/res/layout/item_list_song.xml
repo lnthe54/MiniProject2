@@ -4,22 +4,15 @@
     android:layout_height="wrap_content"
     android:padding="5dp">
 
-    <!--<de.hdodenhof.circleimageview.CircleImageView-->
-    <!--android:id="@+id/iv_song"-->
-    <!--android:layout_width="50dp"-->
-    <!--android:layout_height="50dp"-->
-    <!--android:layout_centerVertical="true"-->
-    <!--android:layout_marginLeft="5dp" />-->
-
     <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/iv_song"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_centerVertical="true"
         android:scaleType="centerCrop"
+        android:src="@drawable/album_default"
         app:riv_corner_radius="5dp"
-        app:riv_mutate_background="true"
-        app:riv_tile_mode="repeat" />
+        app:riv_mutate_background="true" />
 
     <TextView
         android:id="@+id/tv_name_song"
@@ -27,6 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
+        android:layout_toLeftOf="@id/iv_more"
         android:layout_toRightOf="@id/iv_song"
         android:ellipsize="end"
         android:maxLines="1"
@@ -40,6 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/tv_name_song"
         android:layout_below="@id/tv_name_song"
+        android:layout_toLeftOf="@id/iv_more"
         android:drawableLeft="@drawable/ic_phone"
         android:drawablePadding="5dp"
         android:ellipsize="end"

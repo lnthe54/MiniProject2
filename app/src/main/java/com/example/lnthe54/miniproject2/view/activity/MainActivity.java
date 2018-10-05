@@ -1,6 +1,10 @@
 package com.example.lnthe54.miniproject2.view.activity;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,44 +16,64 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.lnthe54.miniproject2.R;
 import com.example.lnthe54.miniproject2.adapter.ViewPagerAdapter;
+import com.example.lnthe54.miniproject2.service.MusicService;
+import com.example.lnthe54.miniproject2.utils.AppController;
+import com.example.lnthe54.miniproject2.utils.Config;
+import com.example.lnthe54.miniproject2.utils.ConfigAction;
 
 public class MainActivity extends AppCompatActivity
         implements ViewPager.OnPageChangeListener, View.OnClickListener,
         NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = "MainActivity";
     private String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE};
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
     private NavigationView navigationView;
-    private android.support.v7.widget.Toolbar toolbar;
+    private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private ViewPagerAdapter pagerAdapter;
-    private ImageView ivHome;
     private RelativeLayout layoutCurrentSong;
     private TextView tvCurrentSong;
     private TextView tvCurrentArtist;
+    private ImageView ivCurrentSong;
+    private MusicService musicService;
+
+    private int totalTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        AppController.getInstance().setMainActivity(this);
+
         if (!checkPermissions()) {
             return;
         }
+
         initViews();
+
+        if (musicService != null) {
+            showCurrentSong();
+        }
+        registerBroadcastUpdatePlaying();
+        addEvents();
+
     }
 
     private boolean checkPermissions() {
@@ -75,12 +99,43 @@ public class MainActivity extends AppCompatActivity
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+    BroadcastReceiver broadcastReceiverUpdatePlaying = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            musicService = (MusicService) AppController.getInstance().getMusicService();
+            if (musicService != null) {
+                layoutCurrentSong.setVisibility(View.VISIBLE);
+            } else {
+                layoutCurrentSong.setVisibility(View.GONE);
+            }
+            showCurrentSong();
+            if (musicService != null) {
+                totalTime = musicService.getTotalTime();
+//                updateSeekBar();
+                if (musicService.isPlaying()) {
+//                    ivPlayPause.setImageResource(R.drawable.pause_button);
+                } else {
+//                    ivPlayPause.setImageResource(R.drawable.play_button);
+                }
+            }
+        }
+    };
+
+    private void registerBroadcastUpdatePlaying() {
+        IntentFilter intentFilter = new IntentFilter(ConfigAction.ACTION_UPDATE_PlAY_STATUS);
+        registerReceiver(broadcastReceiverUpdatePlaying, intentFilter);
+    }
+
+    private void unRegisterBroadcastUpdatePlaying() {
+        unregisterReceiver(broadcastReceiverUpdatePlaying);
+    }
+
     private void initViews() {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
-        ivHome = findViewById(R.id.ic_home);
-        ivHome.setOnClickListener(this);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home);
 
         drawerLayout = findViewById(R.id.drawer_layout);
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
@@ -96,9 +151,19 @@ public class MainActivity extends AppCompatActivity
 
         layoutCurrentSong = findViewById(R.id.layout_current_song);
 
-        tvCurrentSong = findViewById(R.id.tv_current_song);
-        tvCurrentSong = findViewById(R.id.tv_current_artist);
+        if (musicService != null) {
+            layoutCurrentSong.setVisibility(View.VISIBLE);
+        } else {
+            layoutCurrentSong.setVisibility(View.GONE);
+        }
 
+        ivCurrentSong = findViewById(R.id.iv_current_song);
+        tvCurrentSong = findViewById(R.id.tv_current_song);
+        tvCurrentArtist = findViewById(R.id.tv_current_artist);
+    }
+
+    private void addEvents() {
+        layoutCurrentSong.setOnClickListener(this);
     }
 
     private void addPagerAdapter() {
@@ -110,10 +175,25 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                drawerLayout.openDrawer(Gravity.LEFT);
+                break;
+            }
+        }
+        return true;
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.ic_home: {
-                drawerLayout.openDrawer(Gravity.LEFT);
+            case android.R.id.home: {
+
+            }
+
+            case R.id.layout_current_song: {
+                clickLayoutPlaying();
                 break;
             }
         }
@@ -156,5 +236,39 @@ public class MainActivity extends AppCompatActivity
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void showCurrentSong() {
+        if (musicService != null) {
+            if (musicService.getCurrentSong().getAlbumImage() != null) {
+                Glide.with(this)
+                        .load(musicService.getCurrentSong().getAlbumImage())
+                        .into(ivCurrentSong);
+            } else {
+                ivCurrentSong.setImageResource(R.drawable.album_default);
+            }
+
+            Animation rotate = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rotate_iv_playing);
+            ivCurrentSong.startAnimation(rotate);
+            tvCurrentSong.setText(musicService.getCurrentSong().getNameSong());
+            tvCurrentArtist.setText(musicService.getCurrentSong().getArtistSong());
+
+        }
+    }
+
+    private void clickLayoutPlaying() {
+        if (musicService != null) {
+            Intent openPlay = new Intent(MainActivity.this, PlayMusicActivity.class);
+            openPlay.putExtra(Config.IS_PLAYING, true);
+            startActivity(openPlay);
+            this.overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AppController.getInstance().setMainActivity(null);
+        unRegisterBroadcastUpdatePlaying();
     }
 }

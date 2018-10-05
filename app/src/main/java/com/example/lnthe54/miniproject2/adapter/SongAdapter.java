@@ -76,7 +76,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
             if (albumArt != null) {
                 Glide.with(itemView.getContext()).load(albumArt).into(ivSong);
             } else {
-                ivSong.setImageResource(R.drawable.ic_song);
+                ivSong.setImageResource(R.drawable.album_default);
             }
             tvNameSong.setText(song.getNameSong());
             tvArtistSong.setText(song.getArtistSong());

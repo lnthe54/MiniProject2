@@ -25,13 +25,13 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_gravity="center"
-                android:scaleType="fitCenter"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_album_default"
                 app:riv_border_color="@color/colorBlack"
                 app:riv_border_width="1dp"
                 app:riv_corner_radius="30dp"
                 app:riv_mutate_background="true"
-                app:riv_oval="true"
-                app:riv_tile_mode="repeat" />
+                app:riv_oval="true" />
 
             <TextView
                 android:id="@+id/tv_name_album"

@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.example.lnthe54.miniproject2.R;
 import com.example.lnthe54.miniproject2.model.Song;
-import com.example.lnthe54.miniproject2.ultis.ConvertTime;
+import com.example.lnthe54.miniproject2.utils.ConvertTime;
 
 import java.util.ArrayList;
 

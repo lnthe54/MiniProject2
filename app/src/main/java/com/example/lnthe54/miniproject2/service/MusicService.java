@@ -8,6 +8,9 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.example.lnthe54.miniproject2.model.Song;
+import com.example.lnthe54.miniproject2.utils.AppController;
+import com.example.lnthe54.miniproject2.utils.Common;
+import com.example.lnthe54.miniproject2.utils.ConfigAction;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,7 +38,7 @@ public class MusicService extends Service {
         this.currentSong = currentSong;
     }
 
-    private class LocalBinder extends Binder {
+    public class LocalBinder extends Binder {
         public MusicService getInstanceBoundService() {
             return MusicService.this;
         }
@@ -60,10 +63,16 @@ public class MusicService extends Service {
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
-                if (isRepeat()) {
-                    play(currentSong.getPath());
+                if (AppController.getInstance().getMainActivity() != null) {
+                    Intent intent = new Intent(ConfigAction.ACTION_COMPLETE_SONG);
+                    sendBroadcast(intent);
+                    Common.updateMainActivity();
                 } else {
-                    next();
+                    if (isRepeat()) {
+                        play(currentSong.getPath());
+                    } else {
+                        next();
+                    }
                 }
             }
         });
@@ -148,7 +157,7 @@ public class MusicService extends Service {
         mediaPlayer.seekTo(progress * 1000);
     }
 
-    private int getNextPosition() {
+    public int getNextPosition() {
         if (!isShuffle) {
             if (currentSongPosition == listSong.size() - 1) {
                 return 0;
@@ -172,6 +181,25 @@ public class MusicService extends Service {
         }
         currentSongPosition += 1;
         return currentSongPosition;
+    }
+
+    public int getPreviousPosition() {
+        if (isShuffle()) {
+            int newSongPosition = currentSongPosition;
+            while (newSongPosition == currentSongPosition) {
+                newSongPosition = rd.nextInt(listSong.size());
+            }
+            return newSongPosition;
+        }
+
+        int newSongPosition;
+        if (currentSongPosition == 0) {
+            currentSongPosition = listSong.size() - 1;
+        } else {
+            currentSongPosition--;
+        }
+        newSongPosition = currentSongPosition;
+        return newSongPosition;
     }
 
     public int getCurrentSongPosition() {
