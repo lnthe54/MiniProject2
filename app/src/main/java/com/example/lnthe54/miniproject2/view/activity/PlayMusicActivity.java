@@ -13,6 +13,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -36,6 +39,7 @@ import com.example.lnthe54.miniproject2.utils.Common;
 import com.example.lnthe54.miniproject2.utils.Config;
 import com.example.lnthe54.miniproject2.utils.ConfigAction;
 import com.example.lnthe54.miniproject2.utils.ConvertTime;
+import com.example.lnthe54.miniproject2.view.fragment.FragmentShare;
 
 import java.util.ArrayList;
 
@@ -53,7 +57,8 @@ public class PlayMusicActivity extends AppCompatActivity
     private SeekBar seekBarPlaying;
     private TextView tvTotalTime;
     private TextView tvTimePlayed;
-    private RelativeLayout layoutPlayMusic;
+    private CoordinatorLayout layoutPlayMusic;
+    private RelativeLayout layoutShare;
 
     private ImageView ivPlayPause;
     private ImageView ivNextTrack;
@@ -74,6 +79,8 @@ public class PlayMusicActivity extends AppCompatActivity
     private boolean isSeeking;
 
     private MusicService musicService;
+    private BottomSheetDialog dialogShare;
+    private BottomSheetBehavior bottomSheetBehavior;
     private static PlayMusicPresenter musicPresenter;
 
     @Override
@@ -130,6 +137,7 @@ public class PlayMusicActivity extends AppCompatActivity
     private void initViews() {
         toolbar = findViewById(R.id.toolbar);
         layoutPlayMusic = findViewById(R.id.layout_play_music);
+        layoutShare = findViewById(R.id.layout_share);
 
         ivPlaying = findViewById(R.id.iv_playing);
         tvTimePlayed = findViewById(R.id.tv_time_played);
@@ -366,8 +374,13 @@ public class PlayMusicActivity extends AppCompatActivity
                 this.overridePendingTransition(R.anim.no_change, R.anim.slide_down);
                 break;
             }
+
+            case R.id.icon_share: {
+                showLayoutShare();
+                break;
+            }
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
 
@@ -414,6 +427,11 @@ public class PlayMusicActivity extends AppCompatActivity
                 break;
             }
         }
+    }
+
+    private void showLayoutShare() {
+        FragmentShare frgShare = new FragmentShare();
+        frgShare.show(getSupportFragmentManager(), frgShare.getTag());
     }
 
     @Override

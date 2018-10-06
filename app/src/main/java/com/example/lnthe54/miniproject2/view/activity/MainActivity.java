@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity
     private MusicService musicService;
 
     private MainPresenter mainPresenter;
+    private int currentIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -222,7 +223,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onPageSelected(int position) {
-
+        navigationView.getMenu().getItem(position).setChecked(true);
     }
 
     @Override
@@ -235,12 +236,15 @@ public class MainActivity extends AppCompatActivity
 
         switch (item.getItemId()) {
             case R.id.ic_song: {
+                currentIndex = 0;
                 break;
             }
             case R.id.ic_album: {
+                currentIndex = 1;
                 break;
             }
             case R.id.ic_artist: {
+                currentIndex = 2;
                 break;
             }
             case R.id.ic_log_out: {
@@ -249,8 +253,13 @@ public class MainActivity extends AppCompatActivity
             case R.id.ic_setting: {
                 break;
             }
+            default: {
+                currentIndex = 0;
+            }
         }
+
         drawerLayout.closeDrawer(GravityCompat.START);
+        viewPager.setCurrentItem(currentIndex);
         return true;
     }
 
