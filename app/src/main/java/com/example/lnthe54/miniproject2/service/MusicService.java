@@ -1,9 +1,12 @@
 package com.example.lnthe54.miniproject2.service;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
@@ -17,6 +20,7 @@ import com.example.lnthe54.miniproject2.utils.AppController;
 import com.example.lnthe54.miniproject2.utils.Common;
 import com.example.lnthe54.miniproject2.utils.Config;
 import com.example.lnthe54.miniproject2.utils.ConfigAction;
+import com.example.lnthe54.miniproject2.view.activity.MainActivity;
 import com.example.lnthe54.miniproject2.view.activity.PlayMusicActivity;
 
 import java.io.IOException;
@@ -32,6 +36,7 @@ public class MusicService extends Service {
     private static MediaPlayer mediaPlayer;
     private RemoteViews views;
     private Notification notification;
+    private NotificationManager notificationManager;
 
     private int currentSongPosition;
     private Song currentSong;
@@ -52,6 +57,33 @@ public class MusicService extends Service {
         public MusicService getInstanceBoundService() {
             return MusicService.this;
         }
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if (ConfigAction.ACTION_STOP.equals(intent.getAction())) {
+            PlayMusicActivity musicActivity = (PlayMusicActivity) AppController.getInstance().getPlayMusicActivity();
+            MainActivity mainActivity = (MainActivity) AppController.getInstance().getMainActivity();
+            if (musicActivity != null) {
+                musicActivity.changePlayState();
+            }
+            if (mainActivity != null) {
+                mainActivity.clickBtnPlayPause();
+            }
+            if (musicActivity != null && mainActivity == null) {
+                stopSelf();
+            }
+
+            pause();
+            stopForeground(true);
+            isShowNotification = false;
+        } else {
+            showNotification(isShowNotification());
+            isShowNotification = true;
+        }
+
+        return START_NOT_STICKY;
     }
 
     @Override
@@ -248,7 +280,10 @@ public class MusicService extends Service {
     public Notification showNotification(boolean isStatus) {
         views = new RemoteViews(getPackageName(), R.layout.layout_notification);
         Intent openPlayMusic = new Intent(getApplicationContext(), PlayMusicActivity.class);
-
+        openPlayMusic.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        openPlayMusic.setAction(Intent.ACTION_MAIN);
+        openPlayMusic.addCategory(Intent.CATEGORY_LAUNCHER);
+        openPlayMusic.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         openPlayMusic.putExtra(Config.IS_PLAYING, true);
 
         if (isPlaying()) {
@@ -280,7 +315,6 @@ public class MusicService extends Service {
         PendingIntent piStop = PendingIntent.getService(this,
                 0, intentStopSelf, PendingIntent.FLAG_UPDATE_CURRENT);
 
-
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "lnthe54");
         builder.setContentIntent(pendingIntent);
         builder.setSmallIcon(R.drawable.ic_song);
@@ -289,7 +323,13 @@ public class MusicService extends Service {
         views.setTextViewText(R.id.tv_name_song, currentSong.getNameSong());
         views.setTextViewText(R.id.tv_artist_song, currentSong.getArtistSong());
 
-        views.setImageViewResource(R.id.iv_notification, R.drawable.ic_album_default);
+        String imageSong = listSong.get(currentSongPosition).getAlbumImage();
+        if (imageSong != null) {
+            Bitmap bitmap = BitmapFactory.decodeFile(imageSong);
+            views.setImageViewBitmap(R.id.iv_notification, bitmap);
+        } else {
+            views.setImageViewResource(R.id.iv_notification, R.drawable.ic_album_default);
+        }
 
         notification = builder.build();
 

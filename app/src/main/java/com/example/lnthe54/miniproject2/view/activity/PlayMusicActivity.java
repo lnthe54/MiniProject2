@@ -429,6 +429,10 @@ public class PlayMusicActivity extends AppCompatActivity
         }
     }
 
+    public void changePlayState() {
+        ivPlayPause.setImageResource(R.drawable.ic_play);
+    }
+
     private void showLayoutShare() {
         FragmentShare frgShare = new FragmentShare();
         frgShare.show(getSupportFragmentManager(), frgShare.getTag());

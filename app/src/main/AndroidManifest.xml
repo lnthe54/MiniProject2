@@ -31,6 +31,12 @@
                 <action android:name="com.example.lnthe54.musicplayer.ACTION_NEXT" />
             </intent-filter>
         </receiver>
+
+        <receiver android:name=".receivers.PlayPauseSong">
+            <intent-filter>
+                <action android:name="com.example.lnthe54.musicplayer.ACTION_PLAY_PAUSE" />
+            </intent-filter>
+        </receiver>
         <receiver android:name=".receivers.PreviousSong">
             <intent-filter>
                 <action android:name="com.example.lnthe54.musicplayer.ACTION_PREV" />
