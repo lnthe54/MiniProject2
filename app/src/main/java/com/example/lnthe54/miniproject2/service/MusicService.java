@@ -1,16 +1,23 @@
 package com.example.lnthe54.miniproject2.service;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
+import android.widget.RemoteViews;
 
+import com.example.lnthe54.miniproject2.R;
 import com.example.lnthe54.miniproject2.model.Song;
 import com.example.lnthe54.miniproject2.utils.AppController;
 import com.example.lnthe54.miniproject2.utils.Common;
+import com.example.lnthe54.miniproject2.utils.Config;
 import com.example.lnthe54.miniproject2.utils.ConfigAction;
+import com.example.lnthe54.miniproject2.view.activity.PlayMusicActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,11 +30,14 @@ import java.util.Random;
 public class MusicService extends Service {
     private LocalBinder localBinder = new LocalBinder();
     private static MediaPlayer mediaPlayer;
+    private RemoteViews views;
+    private Notification notification;
 
     private int currentSongPosition;
     private Song currentSong;
     private ArrayList<Song> listSong;
 
+    private boolean isShowNotification = false;
     private boolean isRepeat = false;
     private boolean isShuffle = false;
     private Random rd;
@@ -66,6 +76,7 @@ public class MusicService extends Service {
                 if (AppController.getInstance().getMainActivity() != null) {
                     Intent intent = new Intent(ConfigAction.ACTION_COMPLETE_SONG);
                     sendBroadcast(intent);
+                    showNotification(true);
                     Common.updateMainActivity();
                 } else {
                     if (isRepeat()) {
@@ -228,6 +239,69 @@ public class MusicService extends Service {
 
     public void setRepeat(boolean repeat) {
         isRepeat = repeat;
+    }
+
+    public boolean isShowNotification() {
+        return isShowNotification;
+    }
+
+    public Notification showNotification(boolean isStatus) {
+        views = new RemoteViews(getPackageName(), R.layout.layout_notification);
+        Intent openPlayMusic = new Intent(getApplicationContext(), PlayMusicActivity.class);
+
+        openPlayMusic.putExtra(Config.IS_PLAYING, true);
+
+        if (isPlaying()) {
+            views.setImageViewResource(R.id.iv_play_pause_noti, R.drawable.pause_music);
+        } else {
+            views.setImageViewResource(R.id.iv_play_pause_noti, R.drawable.play_music);
+        }
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),
+                0, openPlayMusic, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent intentPrev = new Intent(ConfigAction.ACTION_PREV);
+        intentPrev.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent piPrevious = PendingIntent.getBroadcast(getApplicationContext(),
+                0, intentPrev, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent intentPlayPause = new Intent(ConfigAction.ACTION_PLAY_PAUSE);
+        intentPlayPause.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent piPlayPause = PendingIntent.getBroadcast(getApplicationContext(),
+                0, intentPlayPause, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent intentNext = new Intent(ConfigAction.ACTION_NEXT);
+        intentNext.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent piNext = PendingIntent.getBroadcast(getApplicationContext(),
+                0, intentNext, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent intentStopSelf = new Intent(this, MusicService.class);
+        intentStopSelf.setAction(ConfigAction.ACTION_STOP);
+        PendingIntent piStop = PendingIntent.getService(this,
+                0, intentStopSelf, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "lnthe54");
+        builder.setContentIntent(pendingIntent);
+        builder.setSmallIcon(R.drawable.ic_song);
+        builder.setCustomBigContentView(views);
+
+        views.setTextViewText(R.id.tv_name_song, currentSong.getNameSong());
+        views.setTextViewText(R.id.tv_artist_song, currentSong.getArtistSong());
+
+        views.setImageViewResource(R.id.iv_notification, R.drawable.ic_album_default);
+
+        notification = builder.build();
+
+        views.setOnClickPendingIntent(R.id.iv_close, piStop);
+        views.setOnClickPendingIntent(R.id.iv_previous_noti, piPrevious);
+        views.setOnClickPendingIntent(R.id.iv_play_pause_noti, piPlayPause);
+        views.setOnClickPendingIntent(R.id.iv_next_noti, piNext);
+
+        if (isStatus) {
+            startForeground(Config.NOTIFICATION, notification);
+        }
+        return notification;
     }
 
     @Override

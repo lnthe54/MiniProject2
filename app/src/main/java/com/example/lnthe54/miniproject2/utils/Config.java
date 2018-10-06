@@ -17,4 +17,5 @@ public interface Config {
     String IS_PLAYING = "is playing";
     String LIST_SONG = "list song";
     String SONG_POSITION = "song position";
+    int NOTIFICATION = 54;
 }

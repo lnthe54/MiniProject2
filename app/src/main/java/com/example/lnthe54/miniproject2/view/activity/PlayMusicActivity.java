@@ -13,9 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialog;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -57,7 +54,7 @@ public class PlayMusicActivity extends AppCompatActivity
     private SeekBar seekBarPlaying;
     private TextView tvTotalTime;
     private TextView tvTimePlayed;
-    private CoordinatorLayout layoutPlayMusic;
+    private RelativeLayout layoutPlayMusic;
     private RelativeLayout layoutShare;
 
     private ImageView ivPlayPause;
@@ -79,8 +76,6 @@ public class PlayMusicActivity extends AppCompatActivity
     private boolean isSeeking;
 
     private MusicService musicService;
-    private BottomSheetDialog dialogShare;
-    private BottomSheetBehavior bottomSheetBehavior;
     private static PlayMusicPresenter musicPresenter;
 
     @Override
@@ -98,7 +93,7 @@ public class PlayMusicActivity extends AppCompatActivity
         if (musicService == null) {
             initService();
         } else {
-
+            musicService.showNotification(!musicService.isShowNotification());
             musicPresenter.updateSeekBar();
             totalTimeSong = musicService.getTotalTime();
             musicPresenter.updateData();
@@ -217,6 +212,7 @@ public class PlayMusicActivity extends AppCompatActivity
             totalTimeSong = musicService.getTotalTime();
             musicPresenter.updateSeekBar();
             musicPresenter.updateMainActivity();
+            musicService.showNotification(true);
             Common.updateMainActivity();
         }
     };
@@ -328,6 +324,7 @@ public class PlayMusicActivity extends AppCompatActivity
         Intent openService = new Intent(PlayMusicActivity.this, MusicService.class);
         startService(openService);
         musicPresenter.updateData();
+        musicService.showNotification(true);
         musicPresenter.updateMainActivity();
     }
 
@@ -403,16 +400,19 @@ public class PlayMusicActivity extends AppCompatActivity
             case R.id.iv_previous: {
                 musicPresenter.previousMusic();
                 ivPlayPause.setImageResource(R.drawable.ic_pause);
+                musicService.showNotification(true);
                 break;
             }
             case R.id.iv_pause_play: {
                 musicPresenter.playPauseMusic();
+                musicService.showNotification(true);
                 break;
             }
 
             case R.id.iv_next: {
                 musicPresenter.nextMusic();
                 ivPlayPause.setImageResource(R.drawable.ic_pause);
+                musicService.showNotification(true);
                 break;
             }
 
