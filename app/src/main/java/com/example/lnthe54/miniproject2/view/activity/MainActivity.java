@@ -293,29 +293,33 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void clickBtnPrevious() {
-        if (musicService.isPlaying()) {
-            musicService.back();
+        if (musicService != null) {
+            Intent intentPrevious = new Intent(ConfigAction.ACTION_PREV);
+            sendBroadcast(intentPrevious);
         }
-        mainPresenter.showCurrentSong();
     }
 
     @Override
     public void clickBtnPlayPause() {
-        if (musicService.isPlaying()) {
-            ivPlayPause.setImageResource(R.drawable.play_btn);
-            musicService.pause();
-        } else {
-            ivPlayPause.setImageResource(R.drawable.pause_btn);
-            musicService.resume();
+        if (musicService != null) {
+            Intent intentPlayPause = new Intent(ConfigAction.ACTION_PLAY_PAUSE);
+
+            if (musicService.isPlaying()) {
+                ivPlayPause.setImageResource(R.drawable.play_btn);
+            } else {
+                ivPlayPause.setImageResource(R.drawable.pause_btn);
+            }
+
+            sendBroadcast(intentPlayPause);
         }
     }
 
     @Override
     public void clickBtnNext() {
-        if (musicService.isPlaying()) {
-            musicService.next();
+        if (musicService != null) {
+            Intent intentNext = new Intent(ConfigAction.ACTION_NEXT);
+            sendBroadcast(intentNext);
         }
-        mainPresenter.showCurrentSong();
     }
 
     @Override

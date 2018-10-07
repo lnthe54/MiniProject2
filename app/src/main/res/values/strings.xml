@@ -30,4 +30,8 @@
     <string name="message">Message</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="cancel">Hủy</string>
+    <string name="infor_song">Thông tin bài hát</string>
+    <string name="add_favourite">Thêm vào danh sách yêu thích</string>
+    <string name="setting_music">Cài làm nhạc chuông</string>
+    <string name="delete_song">Xóa khỏi bộ nhớ</string>
 </resources>

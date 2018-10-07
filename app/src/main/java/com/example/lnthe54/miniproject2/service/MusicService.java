@@ -310,10 +310,10 @@ public class MusicService extends Service {
         PendingIntent piNext = PendingIntent.getBroadcast(getApplicationContext(),
                 0, intentNext, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Intent intentStopSelf = new Intent(this, MusicService.class);
-        intentStopSelf.setAction(ConfigAction.ACTION_STOP);
+        Intent intentStop = new Intent(this, MusicService.class);
+        intentStop.setAction(ConfigAction.ACTION_STOP);
         PendingIntent piStop = PendingIntent.getService(this,
-                0, intentStopSelf, PendingIntent.FLAG_UPDATE_CURRENT);
+                0, intentStop, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "lnthe54");
         builder.setContentIntent(pendingIntent);

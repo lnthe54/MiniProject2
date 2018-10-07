@@ -85,7 +85,7 @@ public class FragmentSong extends Fragment implements SearchView.OnQueryTextList
     private void showListSong() {
         listSong = new ArrayList<>();
         frgSongPresenter.getSongFromStorage();
-        songAdapter = new SongAdapter(this, listSong);
+        songAdapter = new SongAdapter(getContext(), this, listSong);
         rvListSong.setAdapter(songAdapter);
     }
 
