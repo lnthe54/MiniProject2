@@ -40,6 +40,7 @@ public class DetailArtistActivity extends AppCompatActivity
     private String nameArtist;
     private int numberOfSong;
     private int numberOfAlbum;
+    private int artistID;
 
     private AlbumAdapter albumAdapter;
     private ArrayList<Albums> listAlbum;
@@ -67,6 +68,7 @@ public class DetailArtistActivity extends AppCompatActivity
     private void getDataFromIntent() {
         Intent intent = getIntent();
 
+        artistID = intent.getIntExtra(Config.ID_ARTIST, 0);
         nameArtist = intent.getStringExtra(Config.NAME_ARTIST);
         numberOfAlbum = intent.getIntExtra(Config.NUMBER_ALBUM, 0);
         numberOfSong = intent.getIntExtra(Config.NUMBER_SONG, 0);
@@ -99,24 +101,24 @@ public class DetailArtistActivity extends AppCompatActivity
 
     private void showData() {
         listAlbum = new ArrayList<>();
-        detailArtistPresenter.getListAlbumOfArtist(nameArtist);
+        detailArtistPresenter.getListAlbumOfArtist(artistID);
         albumAdapter = new AlbumAdapter(this, listAlbum);
         rvListAlbum.setAdapter(albumAdapter);
 
         listSong = new ArrayList<>();
-        detailArtistPresenter.getListSongOfArtist(nameArtist);
+        detailArtistPresenter.getListSongOfArtist(artistID);
         songAdapter = new SongOfAlbumAdapter(this, listSong);
         rvListSong.setAdapter(songAdapter);
     }
 
     @Override
-    public void getListAlbumOfArtist(String nameArtist) {
+    public void getListAlbumOfArtist(int artistID) {
         Uri album = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI;
         Cursor cursor = getContentResolver().query(album,
                 new String[]{MediaStore.Audio.Albums.ALBUM, MediaStore.Audio.Albums.ALBUM_ART,
                         MediaStore.Audio.Albums._ID, MediaStore.Audio.Albums.ARTIST,
                         MediaStore.Audio.Albums.NUMBER_OF_SONGS},
-                MediaStore.Audio.Albums.ARTIST + "=?", new String[]{nameArtist},
+                MediaStore.Audio.Media.ARTIST_ID + "=?", new String[]{String.valueOf(artistID)},
                 MediaStore.Audio.Albums.ALBUM + " ASC");
 
         if (cursor != null && cursor.moveToFirst()) {
@@ -133,14 +135,14 @@ public class DetailArtistActivity extends AppCompatActivity
     }
 
     @Override
-    public void getListSongOfArtist(String nameArtist) {
+    public void getListSongOfArtist(int artistID) {
         Uri albumUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Cursor cursor = getContentResolver().query(albumUri,
                 new String[]{MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media._ID,
                         MediaStore.Audio.Media.DURATION, MediaStore.Audio.Media.DATA,
                         MediaStore.Audio.Media.ALBUM_ID},
-                MediaStore.Audio.Media.ARTIST + "=?",
-                new String[]{nameArtist}, MediaStore.Audio.Media.TITLE + " ASC");
+                MediaStore.Audio.Media.ARTIST_ID + "=?",
+                new String[]{String.valueOf(artistID)}, MediaStore.Audio.Media.TITLE + " ASC");
 
         if (cursor != null && cursor.moveToFirst()) {
             do {

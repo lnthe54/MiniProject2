@@ -18,4 +18,6 @@ public interface Config {
     String LIST_SONG = "list song";
     String SONG_POSITION = "song position";
     int NOTIFICATION = 54;
+    String IS_SHUFFLE = "shuffle";
+    String ID_ARTIST = "id artist";
 }

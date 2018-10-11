@@ -222,6 +222,19 @@ public class DetailAlbumActivity extends AppCompatActivity
     }
 
     private void handlingShuffle() {
+        Intent openPlayMusicActivity = new Intent(DetailAlbumActivity.this, PlayMusicActivity.class);
 
+        listSongSend = (ArrayList<Song>) listSong.clone();
+
+        int songPosition = listSongSend.size();
+
+        openPlayMusicActivity.putExtra(Config.SONG_POSITION, songPosition);
+        openPlayMusicActivity.putExtra(Config.IS_PLAYING, false);
+        openPlayMusicActivity.putExtra(Config.IS_SHUFFLE, true);
+        openPlayMusicActivity.putExtra(Config.PATH, listSong.get(songPosition - 1).getPath());
+        openPlayMusicActivity.putExtra(Config.LIST_SONG, listSongSend);
+
+        startActivity(openPlayMusicActivity);
+        this.overridePendingTransition(R.anim.slide_up, R.anim.no_change);
     }
 }

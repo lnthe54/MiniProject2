@@ -29,10 +29,6 @@ public class Artist {
         return nameArtist;
     }
 
-    public void setNameArtist(String nameArtist) {
-        this.nameArtist = nameArtist;
-    }
-
     public int getNumberSong() {
         return numberSong;
     }

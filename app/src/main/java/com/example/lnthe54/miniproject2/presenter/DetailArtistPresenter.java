@@ -11,11 +11,11 @@ public class DetailArtistPresenter {
         this.callBack = callBack;
     }
 
-    public void getListAlbumOfArtist(String nameArtist) {
+    public void getListAlbumOfArtist(int nameArtist) {
         callBack.getListAlbumOfArtist(nameArtist);
     }
 
-    public void getListSongOfArtist(String nameArtist) {
+    public void getListSongOfArtist(int nameArtist) {
         callBack.getListSongOfArtist(nameArtist);
     }
 
@@ -34,9 +34,9 @@ public class DetailArtistPresenter {
 
     public interface CallBack {
 
-        void getListAlbumOfArtist(String nameArtist);
+        void getListAlbumOfArtist(int artistID);
 
-        void getListSongOfArtist(String nameArtist);
+        void getListSongOfArtist(int artistID);
 
         void openDetailAlbumActivity(int position);
 

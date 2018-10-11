@@ -115,7 +115,13 @@ public class PlayMusicActivity extends AppCompatActivity
     public void getDataFromIntent() {
         Intent intent = getIntent();
         isPlaying = intent.getExtras().getBoolean(Config.IS_PLAYING);
+        isShuffle = intent.getExtras().getBoolean(Config.IS_SHUFFLE);
 
+        if (isShuffle) {
+            currentPosition = intent.getIntExtra(Config.SONG_POSITION, 0);
+            path = intent.getStringExtra(Config.PATH);
+            listSong = (ArrayList<Song>) intent.getSerializableExtra(Config.LIST_SONG);
+        }
         if (isPlaying) {
             path = musicService.getCurrentSong().getPath();
             currentPosition = musicService.getCurrentSongPosition();
@@ -304,7 +310,7 @@ public class PlayMusicActivity extends AppCompatActivity
             tvTimePlayed.setText(ConvertTime.miniSecondToString(currentLength));
         }
 
-        tvTotalTime.setText(ConvertTime.miniSecondToString(totalTimeSong));
+        tvTotalTime.setText(ConvertTime.miniSecondToString(totalTimeSong - currentLength));
         Handler musicHandler = new Handler();
         musicHandler.post(new Runnable() {
             @Override

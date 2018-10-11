@@ -134,10 +134,12 @@ public class FragmentArtists extends Fragment
     public void openDetailArtistActivity(int position) {
         Intent openDetailArtist = new Intent(getContext(), DetailArtistActivity.class);
 
+        int artistID = listArtist.get(position).getId();
         String nameArtist = listArtist.get(position).getNameArtist();
         int numberOfAlbum = listArtist.get(position).getNumberAlbums();
         int numberOfSong = listArtist.get(position).getNumberSong();
 
+        openDetailArtist.putExtra(Config.ID_ARTIST, artistID);
         openDetailArtist.putExtra(Config.NAME_ARTIST, nameArtist);
         openDetailArtist.putExtra(Config.NUMBER_ALBUM, numberOfAlbum);
         openDetailArtist.putExtra(Config.NUMBER_SONG, numberOfSong);

@@ -136,21 +136,14 @@ public class FragmentSong extends Fragment implements SearchView.OnQueryTextList
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        songAdapter.getFilter().filter(query);
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        String userInput = newText.toLowerCase();
-        ArrayList<Song> newList = new ArrayList<>();
-        for (Song songs : listSong) {
-            if (songs.getNameSong().toLowerCase().contains(userInput)) {
-                newList.add(songs);
-            }
-        }
-
-        songAdapter.updateList(newList);
-        return true;
+        songAdapter.getFilter().filter(newText);
+        return false;
     }
 
     @Override

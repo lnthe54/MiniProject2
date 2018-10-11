@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,8 +27,11 @@ import java.util.List;
  * @author lnthe54 on 9/28/2018
  * @project MiniProject2
  */
-public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
+public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder>
+        implements Filterable {
     private ArrayList<Song> listSong;
+    private ArrayList<Song> newListSong;
+
     private CallBack callBack;
     private Context context;
 
@@ -34,6 +39,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
         this.context = context;
         this.callBack = callBack;
         this.listSong = listSong;
+        this.newListSong = listSong;
     }
 
     @NonNull
@@ -44,14 +50,56 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Song song = listSong.get(position);
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+        Song song = newListSong.get(position);
         holder.bindData(song);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (callBack != null) {
+                    callBack.itemClick(position);
+                }
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return listSong.size();
+        return newListSong.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+
+            @Override
+            protected FilterResults performFiltering(CharSequence userInput) {
+
+                String charString = userInput.toString();
+                if (charString.isEmpty()) {
+                    newListSong = listSong;
+                } else {
+                    ArrayList<Song> listFilter = new ArrayList<>();
+                    for (Song row : listSong) {
+                        if (row.getNameSong().toLowerCase().contains(charString.toLowerCase())) {
+                            listFilter.add(row);
+                        }
+                    }
+
+                    newListSong = listFilter;
+                }
+
+                FilterResults results = new FilterResults();
+                results.values = newListSong;
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                newListSong = (ArrayList<Song>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -76,14 +124,14 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
                 }
             });
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (callBack != null) {
-                        callBack.itemClick(getAdapterPosition());
-                    }
-                }
-            });
+//            itemView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if (callBack != null) {
+//                        callBack.itemClick(getAdapterPosition());
+//                    }
+//                }
+//            });
         }
 
         public void bindData(Song song) {
@@ -125,4 +173,37 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
     public interface CallBack {
         void itemClick(int position);
     }
+
+//    private class MFilter extends Filter {
+//
+//        @Override
+//        protected FilterResults performFiltering(CharSequence userInput) {
+//
+//            String charString = userInput.toString();
+//            if (charString.isEmpty()) {
+//                newListSong = listSong;
+//            } else {
+//                ArrayList<Song> listFilter = new ArrayList<>();
+//                for (Song row : listSong) {
+//                    if (row.getNameSong().toLowerCase().contains(charString.toLowerCase())) {
+//                        listFilter.add(row);
+//                    }
+//                }
+//
+//                newListSong = listFilter;
+//            }
+//
+//            FilterResults results = new FilterResults();
+//            results.values = newListSong;
+//            return results;
+//        }
+//
+//        @Override
+//        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+////            newListSong.clear();
+////            newListSong.addAll((Collection<? extends Song>) filterResults.values);
+//            newListSong = (ArrayList<Song>) filterResults.values;
+//            notifyDataSetChanged();
+//        }
+//    }
 }
