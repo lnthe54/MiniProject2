@@ -12,4 +12,5 @@ public interface ConfigAction {
     String ACTION_NEXT = "com.example.lnthe54.musicplayer.ACTION_NEXT";
     String ACTION_UPDATE_PlAY_STATUS = "com.example.lnthe54.musicplayer.ACTION_UPDATE_PlAY_STATUS";
     String ACTION_STOP = "com.example.lnthe54.musicplayer.ACTION_STOP_SERVICE";
+    String ACTION_CHANGE_IMAGE = "com.example.lnthe54.musicplayer.ACTION.CHANGE_IMAGE";
 }

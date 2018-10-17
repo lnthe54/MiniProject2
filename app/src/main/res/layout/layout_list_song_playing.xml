@@ -7,19 +7,8 @@
         android:id="@+id/list_song_playing"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/lay_out_control"
         android:layout_marginBottom="5dp">
 
     </android.support.v7.widget.RecyclerView>
-
-    <RelativeLayout
-        android:id="@+id/lay_out_control"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp">
-
-        <include layout="@layout/layout_control_music" />
-    </RelativeLayout>
 
 </RelativeLayout>

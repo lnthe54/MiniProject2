@@ -12,6 +12,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.example.lnthe54.miniproject2.R;
@@ -32,7 +33,9 @@ import java.util.Random;
  * @project MiniProject2
  */
 public class MusicService extends Service {
+    private static final String TAG = "MusicService";
     private LocalBinder localBinder = new LocalBinder();
+
     private static MediaPlayer mediaPlayer;
     private RemoteViews views;
     private Notification notification;
@@ -59,8 +62,17 @@ public class MusicService extends Service {
         }
     }
 
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        rd = new Random();
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         if (ConfigAction.ACTION_STOP.equals(intent.getAction())) {
             PlayMusicActivity musicActivity = (PlayMusicActivity) AppController.getInstance().getPlayMusicActivity();
@@ -84,13 +96,6 @@ public class MusicService extends Service {
         }
 
         return START_NOT_STICKY;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        rd = new Random();
     }
 
     @Nullable
@@ -347,5 +352,6 @@ public class MusicService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d(TAG, "onDestroy: ");
     }
 }

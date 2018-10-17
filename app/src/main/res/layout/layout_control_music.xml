@@ -2,47 +2,88 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="5dp"
-    android:weightSum="5">
+    android:orientation="vertical"
+    android:padding="5dp">
 
-    <ImageView
-        android:id="@+id/iv_shuffle"
-        android:layout_width="0dp"
+    <RelativeLayout
+        android:id="@+id/layout_seek_bar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:src="@drawable/ic_shuffle_off" />
+        android:layout_below="@id/iv_playing"
+        android:padding="10dp">
 
-    <ImageView
-        android:id="@+id/iv_previous"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:src="@drawable/previous_track_btn" />
+        <TextView
+            android:id="@+id/tv_time_played"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="00:00"
+            android:textColor="@color/colorWhite" />
 
-    <ImageView
-        android:id="@+id/iv_pause_play"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:src="@drawable/ic_pause" />
+        <SeekBar
+            android:id="@+id/seek_bar_playing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/tv_time_total"
+            android:layout_toRightOf="@id/tv_time_played"
+            android:thumbTint="@color/colorBg" />
 
-    <ImageView
-        android:id="@+id/iv_next"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:src="@drawable/next_track_btn" />
+        <TextView
+            android:id="@+id/tv_time_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="00:00"
+            android:textColor="@color/colorWhite" />
 
-    <ImageView
-        android:id="@+id/iv_repeat"
-        android:layout_width="0dp"
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:src="@drawable/ic_repeat_off" />
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:weightSum="5">
+
+        <ImageView
+            android:id="@+id/iv_shuffle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:src="@drawable/ic_shuffle_off" />
+
+        <ImageView
+            android:id="@+id/iv_previous"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:src="@drawable/previous_track_btn" />
+
+        <ImageView
+            android:id="@+id/iv_pause_play"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:src="@drawable/ic_pause" />
+
+        <ImageView
+            android:id="@+id/iv_next"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:src="@drawable/next_track_btn" />
+
+        <ImageView
+            android:id="@+id/iv_repeat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:src="@drawable/ic_repeat_off" />
+    </LinearLayout>
 </LinearLayout>

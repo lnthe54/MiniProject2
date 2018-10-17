@@ -35,7 +35,6 @@ import java.util.ArrayList;
  * @project MiniProject2
  */
 public class FragmentSong extends Fragment implements SearchView.OnQueryTextListener, SongAdapter.CallBack, FrgSongPresenter.CallBack {
-    private static final String TAG = "FragmentSong";
     private static FragmentSong instance;
 
     private View view;
@@ -166,5 +165,4 @@ public class FragmentSong extends Fragment implements SearchView.OnQueryTextList
         startActivity(openPlayMusicActivity);
         getActivity().overridePendingTransition(R.anim.slide_up, R.anim.no_change);
     }
-
 }

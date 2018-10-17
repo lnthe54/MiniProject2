@@ -13,20 +13,20 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.lnthe54.miniproject2.R;
+import com.example.lnthe54.miniproject2.adapter.PlayMusicPagerAdapter;
 import com.example.lnthe54.miniproject2.model.Song;
 import com.example.lnthe54.miniproject2.presenter.PlayMusicPresenter;
 import com.example.lnthe54.miniproject2.service.MusicService;
@@ -49,6 +49,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class PlayMusicActivity extends AppCompatActivity
         implements View.OnClickListener, PlayMusicPresenter.CallBack {
 
+    private static final String TAG = "PlayMusicActivity";
     private Toolbar toolbar;
     private CircleImageView ivPlaying;
     private SeekBar seekBarPlaying;
@@ -56,6 +57,8 @@ public class PlayMusicActivity extends AppCompatActivity
     private TextView tvTimePlayed;
     private RelativeLayout layoutPlayMusic;
     private RelativeLayout layoutShare;
+    private ViewPager viewPager;
+    private PlayMusicPagerAdapter pagerAdapter;
 
     private ImageView ivPlayPause;
     private ImageView ivNextTrack;
@@ -140,6 +143,8 @@ public class PlayMusicActivity extends AppCompatActivity
         layoutPlayMusic = findViewById(R.id.layout_play_music);
         layoutShare = findViewById(R.id.layout_share);
 
+        viewPager = findViewById(R.id.pager);
+        initViewPager();
         ivPlaying = findViewById(R.id.iv_playing);
         tvTimePlayed = findViewById(R.id.tv_time_played);
         tvTotalTime = findViewById(R.id.tv_time_total);
@@ -153,6 +158,13 @@ public class PlayMusicActivity extends AppCompatActivity
         ivRepeat = findViewById(R.id.iv_repeat);
 
         isSeeking = false;
+    }
+
+    private void initViewPager() {
+        pagerAdapter = new PlayMusicPagerAdapter(getSupportFragmentManager(), listSong, artSong);
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.setOffscreenPageLimit(pagerAdapter.getCount());
+        viewPager.setCurrentItem(1);
     }
 
     private void addEvents() {
@@ -204,6 +216,8 @@ public class PlayMusicActivity extends AppCompatActivity
             musicPresenter.playMusic();
             musicPresenter.updateSeekBar();
             totalTimeSong = musicService.getTotalTime();
+
+            Log.d(TAG, "onServiceConnected");
         }
 
         @Override
@@ -245,22 +259,21 @@ public class PlayMusicActivity extends AppCompatActivity
         getSupportActionBar().setTitle(nameSong);
         getSupportActionBar().setSubtitle(nameArtist);
 
+        Intent intentImage = new Intent(ConfigAction.ACTION_CHANGE_IMAGE);
+        intentImage.putExtra(Config.IMAGE, listSong.get(currentPosition).getAlbumImage());
+        sendBroadcast(intentImage);
+
         Bitmap bitmap;
 
         if (artSong != null) {
             bitmap = BitmapFactory.decodeFile(artSong);
-            Glide.with(PlayMusicActivity.this).load(artSong).into(ivPlaying);
         } else {
             bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_bg_playing);
-            ivPlaying.setImageResource(R.drawable.album_default);
         }
         bitmap = BlurImage.blur(this, bitmap);
         BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), bitmap);
 
         layoutPlayMusic.setBackground(bitmapDrawable);
-
-        Animation rotateAnim = AnimationUtils.loadAnimation(PlayMusicActivity.this, R.anim.rotate_iv_playing);
-        ivPlaying.startAnimation(rotateAnim);
 
         tvTotalTime.setText(ConvertTime.miniSecondToString(totalTimeSong));
     }
@@ -329,6 +342,7 @@ public class PlayMusicActivity extends AppCompatActivity
 
         Intent openService = new Intent(PlayMusicActivity.this, MusicService.class);
         startService(openService);
+
         musicPresenter.updateData();
         musicService.showNotification(true);
         musicPresenter.updateMainActivity();

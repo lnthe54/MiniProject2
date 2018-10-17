@@ -9,9 +9,9 @@
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:scaleType="centerCrop"
+        android:src="@drawable/ic_album_default"
         app:riv_corner_radius="5dp"
-        app:riv_mutate_background="true"
-        android:src="@drawable/ic_album_default" />
+        app:riv_mutate_background="true" />
 
     <TextView
         android:id="@+id/tv_name_album"
@@ -22,8 +22,7 @@
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
         android:layout_marginTop="5dp"
-        android:maxLines="1"
-        android:minLines="1" />
+        android:lines="1" />
 
     <TextView
         android:id="@+id/tv_artist_album"

@@ -21,7 +21,6 @@ import com.example.lnthe54.miniproject2.view.fragment.FragmentMoreMusic;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author lnthe54 on 9/28/2018
@@ -29,6 +28,7 @@ import java.util.List;
  */
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder>
         implements Filterable {
+    private static final String TAG = "SongAdapter";
     private ArrayList<Song> listSong;
     private ArrayList<Song> newListSong;
 
@@ -53,14 +53,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder>
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         Song song = newListSong.get(position);
         holder.bindData(song);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (callBack != null) {
-                    callBack.itemClick(position);
-                }
-            }
-        });
     }
 
     @Override
@@ -71,7 +63,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder>
     @Override
     public Filter getFilter() {
         return new Filter() {
-
             @Override
             protected FilterResults performFiltering(CharSequence userInput) {
 
@@ -109,13 +100,20 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder>
         private RoundedImageView ivSong;
         private ImageView ivMore;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull final View itemView) {
             super(itemView);
 
             ivSong = itemView.findViewById(R.id.iv_song);
             tvNameSong = itemView.findViewById(R.id.tv_name_song);
             tvArtistSong = itemView.findViewById(R.id.tv_artist_song);
             ivMore = itemView.findViewById(R.id.iv_more);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callBack.itemClick(getAdapterPosition());
+                }
+            });
 
             ivMore.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -124,14 +122,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder>
                 }
             });
 
-//            itemView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    if (callBack != null) {
-//                        callBack.itemClick(getAdapterPosition());
-//                    }
-//                }
-//            });
         }
 
         public void bindData(Song song) {
@@ -147,7 +137,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder>
         }
 
         public void showBottomSheetMore(int position) {
-            Song song = listSong.get(position);
+            Song song = newListSong.get(position);
 
             String imageSong = song.getAlbumImage();
             String nameSong = song.getNameSong();
@@ -164,46 +154,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder>
         }
     }
 
-    public void updateList(List<Song> newListSong) {
-        listSong = new ArrayList<>();
-        listSong.addAll(newListSong);
-        notifyDataSetChanged();
-    }
-
     public interface CallBack {
         void itemClick(int position);
     }
-
-//    private class MFilter extends Filter {
-//
-//        @Override
-//        protected FilterResults performFiltering(CharSequence userInput) {
-//
-//            String charString = userInput.toString();
-//            if (charString.isEmpty()) {
-//                newListSong = listSong;
-//            } else {
-//                ArrayList<Song> listFilter = new ArrayList<>();
-//                for (Song row : listSong) {
-//                    if (row.getNameSong().toLowerCase().contains(charString.toLowerCase())) {
-//                        listFilter.add(row);
-//                    }
-//                }
-//
-//                newListSong = listFilter;
-//            }
-//
-//            FilterResults results = new FilterResults();
-//            results.values = newListSong;
-//            return results;
-//        }
-//
-//        @Override
-//        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-////            newListSong.clear();
-////            newListSong.addAll((Collection<? extends Song>) filterResults.values);
-//            newListSong = (ArrayList<Song>) filterResults.values;
-//            notifyDataSetChanged();
-//        }
-//    }
 }

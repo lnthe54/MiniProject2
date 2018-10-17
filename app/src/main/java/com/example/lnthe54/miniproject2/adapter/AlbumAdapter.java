@@ -39,6 +39,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Albums albums = listAlbum.get(position);
         holder.bindData(albums);
+        holder.tvNameAlbum.startAnimation(AnimationUtils.loadAnimation(holder.itemView.getContext(), R.anim.translate_text));
     }
 
     @Override
@@ -57,8 +58,6 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
             ivAlbum = itemView.findViewById(R.id.iv_album);
             tvNameAlbum = itemView.findViewById(R.id.tv_name_album);
             tvAuthorAlbum = itemView.findViewById(R.id.tv_artist_album);
-
-            tvNameAlbum.startAnimation(AnimationUtils.loadAnimation(itemView.getContext(), R.anim.translate_text));
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
